@@ -1,47 +1,40 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.com/products/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    template="layout/template.xhtml">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	template="/layout/template.xhtml">
+	
+	<ui:param name="currentPage" value="login" />
 
-<ui:define name="body">
+	<ui:define name="content">
 
-    <h:form id="loginForm">
 
-        <rich:panel>
-            <f:facet name="header">Login</f:facet>
-
-            <p>Please login here</p>
-
-            <div class="dialog">
-                <h:panelGrid columns="2" rowClasses="prop" columnClasses="name,value">
-                    <h:outputLabel for="username">Username</h:outputLabel>
-                    <h:inputText id="username"
-                              value="#{credentials.username}"/>
-                    <h:outputLabel for="password">Password</h:outputLabel>
-                    <h:inputSecret id="password"
-                                value="#{credentials.password}"/>
-                    <h:outputLabel for="rememberMe">Remember me</h:outputLabel>
-                    <h:selectBooleanCheckbox id="rememberMe"
-                                          value="#{rememberMe.enabled}"/>
-                </h:panelGrid>
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6 well" style="opacity: 0.9;">
+        <h1 style="text-align: center">Login</h1>
+        <div class="row">
+            <div class="col-lg-12 well">
+                <h:form role="form">
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <h:inputText value="#{credentials.username}" styleClass="form-control" id="username" placeholder="ex: iamauser" required="true"/>
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <h:inputSecret value="#{credentials.password}" styleClass="form-control" id="password" placeholder="ex: Doe"/>
+                    </div>
+                    <h:commandLink action="#{identity.login}" role="button" styleClass="btn btn-lg btn-primary">Login</h:commandLink>
+              </h:form>
             </div>
-
-            <p>
-              <i>Note - </i> You may login with the username 'admin' and a blank password.
-            </p>
-
-        </rich:panel>
-
-        <div class="actionButtons">
-            <h:commandButton id="submit" value="Login" action="#{identity.login}"/>
         </div>
+       
+        
+        
+      </div>
+      <div class="col-lg-3"></div>
 
-    </h:form>
+    </ui:define>
 
- </ui:define>
 </ui:composition>

@@ -18,6 +18,8 @@ public class PlayerHandler {
 	private EntityManager entityManager;
 
 	public List<Player> getPlayers() {
+
 		return entityManager.createQuery("select p from Player p", Player.class).getResultList();
+
 	}
 }

@@ -3,9 +3,11 @@ package be.pickitup.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,7 +19,10 @@ import org.hibernate.annotations.ForeignKey;
 @Table(name = "game")
 public class Game extends EntityBase {
 	private String name;
-	private Date eventTime;
+	private Player creator;
+	private String description;
+	private Date startDate;
+	private Date endDate;
 	private Location location;
 	private List<Player> players;
 	private List<Message> messages;
@@ -30,15 +35,43 @@ public class Game extends EntityBase {
 		this.name = name;
 	}
 
-	public Date getEventTime() {
-		return eventTime;
-	}
-
-	public void setEventTime(Date eventTime) {
-		this.eventTime = eventTime;
-	}
-
 	@ManyToOne
+	@JoinColumn(name = "player_id", nullable = false)
+	@ForeignKey(name = "FK_G_Creator")
+	public Player getCreator() {
+		return creator;
+	}
+
+	public void setCreator(Player creator) {
+		this.creator = creator;
+	}
+
+	@Lob
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_id", nullable = false)
 	@ForeignKey(name = "FK_G_Location")
 	public Location getLocation() {

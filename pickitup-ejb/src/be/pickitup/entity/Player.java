@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -23,6 +24,7 @@ public class Player extends EntityBase {
 	private Date dateOfBirth;
 	private String email;
 	private String passwordHash;
+	private String about;
 	private List<Player> friends;
 
 	@Column(nullable = false)
@@ -73,6 +75,15 @@ public class Player extends EntityBase {
 
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
+	}
+
+	@Lob
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
 	}
 
 	@ManyToMany
