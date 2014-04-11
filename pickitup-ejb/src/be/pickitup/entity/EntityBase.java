@@ -48,4 +48,19 @@ public class EntityBase {
 		this.lastChangeDate = lastChangeDate;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		EntityBase that = (EntityBase) obj;
+		if (this.id == null)
+			return false;
+
+		return this.id.equals(that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+
 }

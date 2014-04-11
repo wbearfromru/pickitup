@@ -19,7 +19,9 @@
 		            <div class="col-lg-12" id="map-canvas" style="height: 300px;"></div>
 		        </div>
 		        <br/>
+		        <a:form>
 		        <a:repeat var="game" value="#{GameHandler.games}" rowKeyVar="index">
+		        	<ui:param name="alreadyJoined" value="#{ game.players.contains(player) ? true : false }"></ui:param>
 		        	<div class="row">
 			            <div class="col-lg-12 well">
 			                <h5>
@@ -29,19 +31,38 @@
 			                <br/>
 			                <span style="font-weight: 600;">Date:</span> #{GamesNearMe.formatGameDate(game.startDate)}
 			                <br/><br/>
-			                <a class="btn btn-sm btn-primary" href="#" role="button">Join &#187;</a>
+			                <div class="game-buttons">
+				                <a class="btn btn-sm btn-primary btn-join" style="#{alreadyJoined ? 'display:none;' : ''}" role="button" onclick="joinGame(#{game.id})">Join &#187;</a>
+				                <a class="btn btn-sm btn-danger btn-leave" style="#{alreadyJoined ? '' : 'display:none;'}" role="button" onclick="leaveGame(#{game.id})" >Leave &#187;</a>
+			                </div>
 			            </div>
 			        </div>
 		        </a:repeat>
+		        </a:form>
 		      </div>
 		      <div class="col-lg-3"></div>
 		</div>
 		<!-- /container -->
 	</ui:define>
 	<ui:define name="pageJs">
+		<a:jsFunction name="joinGame" action="#{GamesNearMe.joinGame(gameId)}" >
+			<a:actionparam name="param1" assignTo="#{gameId}"/>
+		</a:jsFunction>
+		<a:jsFunction name="leaveGame" action="#{GamesNearMe.leaveGame(gameId)}" >
+			<a:actionparam name="param1" assignTo="#{gameId}"/>
+		</a:jsFunction>
 	    <script>
 	        $(function(){
 	            nearMeMaps('#{GamesNearMe.locations}');
+
+	            $('.btn-join').click(function(e){
+		            $(this).parent().find('.btn-leave').show();
+		            $(this).hide();
+	            });
+	            $('.btn-leave').click(function(e){
+		            $(this).parent().find('.btn-join').show();
+		            $(this).hide();
+	            });
 	        });
 	    </script>
 	</ui:define>

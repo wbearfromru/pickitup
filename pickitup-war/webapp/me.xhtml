@@ -2,7 +2,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:s="http://jboss.com/products/seam/taglib"
 	template="/layout/template.xhtml"
-                xmlns:h="http://java.sun.com/jsf/html">
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j">
 	
 	<ui:param name="currentPage" value="me" />
 	<ui:param name="includeGoogleMaps" value="true" />
@@ -88,7 +89,10 @@
 		                                <label>Comments:</label> #{game.description} 
 		                            </div>
 		                            <div class="row">
-		                                <label>Confirmed Players:</label> <span class="label label-default">Michael Jordan</span> <span class="label label-default">Scotty Pippen</span>
+		                                <label>Confirmed Players:</label>
+		                                <a:repeat var="joinedPlayer" value="#{game.players}">
+		                                 <span class="label label-default">#{joinedPlayer.screenName}</span>
+		                                </a:repeat> 
 		                            </div>
 		                        </div>
 		                    </div>

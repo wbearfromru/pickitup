@@ -18,8 +18,8 @@
 			<h:form>
 			<ul class="nav navbar-nav">
 				<li class="#{active == 'home' ? 'active' : ''}"><s:link action="/index.xhtml" propagation="end"> Home</s:link></li>
-				<li class="#{active == 'nearme' ? 'active' : ''}"><s:link action="/nearme.xhtml" propagation="end"> Games Near Me</s:link></li>
 				<h:panelGroup rendered="#{identity.loggedIn}">
+					<li class="#{active == 'nearme' ? 'active' : ''}"><s:link action="/nearme.xhtml" propagation="end"> Games Near Me</s:link></li>
 					<li class="#{active == 'creategame' ? 'active' : ''}"><s:link action="/creategame.xhtml" propagation="end"> Create Game</s:link></li>
 					<li>
 						<h:commandLink action="#{identity.logout()}" propagation="end">

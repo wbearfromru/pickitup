@@ -1,16 +1,10 @@
 package be.pickitup.bean.action;
 
-import javax.annotation.security.PermitAll;
-import javax.ejb.Remove;
 import javax.ejb.Stateful;
-import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 
-import org.jboss.beans.metadata.api.annotations.Create;
-import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.ejb.SeamInterceptor;
 
 import be.pickitup.entity.Game;
 import be.pickitup.entity.Location;
@@ -18,8 +12,7 @@ import be.pickitup.entity.Player;
 
 @Stateful
 @Name("CreateGame")
-@Interceptors(SeamInterceptor.class)
-public class CreateGameBean implements CreateGame {
+public class CreateGameBean extends StatefulBean implements CreateGame {
 
 	@In
 	private EntityManager entityManager;
@@ -68,17 +61,5 @@ public class CreateGameBean implements CreateGame {
 
 	public void setLocationLng(Double locationLng) {
 		this.locationLng = locationLng;
-	}
-
-	@Remove
-	@Destroy
-	@PermitAll
-	public void destroy() {
-		System.out.println("Destroy " + this.toString());
-	}
-
-	@Create
-	public void create() {
-		System.out.println("Create " + this.toString());
 	}
 }

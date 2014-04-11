@@ -1,5 +1,6 @@
 package be.pickitup.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +87,8 @@ public class Game extends EntityBase {
 	@JoinTable(name = "game_players", joinColumns = { @JoinColumn(name = "game_id") }, inverseJoinColumns = { @JoinColumn(name = "player_id") })
 	@ForeignKey(name = "FK_GP_Game", inverseName = "FK_GP_Player")
 	public List<Player> getPlayers() {
+		if (players == null)
+			players = new ArrayList<Player>();
 		return players;
 	}
 
@@ -95,6 +98,8 @@ public class Game extends EntityBase {
 
 	@OneToMany(mappedBy = "location")
 	public List<Message> getMessages() {
+		if (messages == null)
+			messages = new ArrayList<Message>();
 		return messages;
 	}
 

@@ -4,18 +4,16 @@
  * and open the template in the editor.
  */
 
+var initialLocation;
+var browserSupportFlag =  new Boolean();
+var marker = null;
+
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 function nearMeMaps(data){
 	data = JSON.parse(data);
 	
-    var mapOptions = {
-          center: new google.maps.LatLng(data.position.lat, data.position.lng),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.SATELLITE,
-        };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions);
+	var map = initialize();
        
     for (var i = 0; i < data.locations.length; i++){
     	var location = data.locations[i];
@@ -29,33 +27,12 @@ function nearMeMaps(data){
 }
 
 function createGameMaps(){
-    var mapOptions = {
-          center: new google.maps.LatLng(50.8738191, 4.7039937),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.SATELLITE
-        };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions);
-        
+	initialize();
 }
 
 function createGameMapsDynamic(){
-    var latLng = new google.maps.LatLng(50.8738191, 4.7039937);
-    var mapOptions = {
-          center: latLng,
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.SATELLITE
-        };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions);
-        
-    var marker = new google.maps.Marker({
-        position: latLng,
-        title:"Hello World!",
-        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|AE4D4D|000000'
-    });
-    marker.setMap(map);
-        
+    var map = initialize(true);
+ 
     $("#locateLocationBtn").click(function(){
         codeAddress(map, marker);
     });
@@ -125,4 +102,56 @@ function getPlayerCal(){
             ]
     });
 
+}
+
+
+
+function initialize(addMarker) {
+	
+
+	var myOptions = {
+		zoom : 14,
+		mapTypeId : google.maps.MapTypeId.ROADMAP
+	};
+	var map = new google.maps.Map(document.getElementById("map-canvas"),
+			myOptions);
+
+	// Try W3C Geolocation (Preferred)
+	if (navigator.geolocation) {
+		browserSupportFlag = true;
+		navigator.geolocation.getCurrentPosition(function(position) {
+			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+			map.setCenter(initialLocation);
+			if (addMarker){
+				marker = new google.maps.Marker({
+			        position: initialLocation,
+			        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|AE4D4D|000000'
+			    });
+			    marker.setMap(map);
+			}
+		}, function() {
+			handleNoGeolocation(browserSupportFlag);
+		});
+	}
+	// Browser doesn't support Geolocation
+	else {
+		browserSupportFlag = false;
+		handleNoGeolocation(browserSupportFlag);
+	}
+
+	return map;
+
+	function handleNoGeolocation(errorFlag) {
+		var siberia = new google.maps.LatLng(60, 105);
+		var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+		
+		if (errorFlag == true) {
+			alert("Geolocation service failed.");
+			initialLocation = newyork;
+		} else {
+			alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
+			initialLocation = siberia;
+		}
+		map.setCenter(initialLocation);
+	}
 }

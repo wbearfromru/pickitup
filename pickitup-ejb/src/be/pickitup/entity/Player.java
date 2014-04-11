@@ -10,6 +10,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -97,4 +98,8 @@ public class Player extends EntityBase {
 		this.friends = friends;
 	}
 
+	@Transient
+	public String getScreenName() {
+		return this.firstname + " " + this.lastname;
+	}
 }
