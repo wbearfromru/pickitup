@@ -14,7 +14,7 @@ public class InputRenderer extends TextRenderer {
 			String currentValue)
 			throws java.io.IOException {
 
-		String[] attributes = { "placeholder", "data-theme" };
+		String[] attributes = { "placeholder", "data-theme", "data-format", "data-date-format" };
 
 		ResponseWriter writer = context.getResponseWriter();
 

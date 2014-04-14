@@ -7,6 +7,9 @@
 var initialLocation;
 var browserSupportFlag =  new Boolean();
 var marker = null;
+var map = null;
+var markers = [];
+var timeSpan = 0;
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -15,15 +18,57 @@ function nearMeMaps(data){
 	
 	var map = initialize();
        
-    for (var i = 0; i < data.locations.length; i++){
-    	var location = data.locations[i];
-    	 var marker = new google.maps.Marker({
-    	        position: new google.maps.LatLng(location.lat, location.lng),
-    	        title:"Hello World!",
-    	        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+letters.charAt(i)+'|AE4D4D|000000',
-    	    });
-        marker.setMap(map);
-    };
+    google.maps.event.addListener(map, 'center_changed', function() {
+    	getEvents(map);
+      });
+    google.maps.event.addListener(map, 'zoom_changed', function() {
+    	getEvents(map);
+    });
+}
+
+var updateGamesTimeOut = null;
+
+function getEvents(map){
+	if (typeof map == 'undefined' || typeof map.getBounds() == 'undefined')
+		return;
+	
+	if (updateGamesTimeOut != null)
+		clearTimeout(updateGamesTimeOut);
+	
+	updateGamesTimeOut = setTimeout(refreshMap, 200);
+}
+
+function setTimeSpan(el, span) {
+	$(el).parent().parent().children().removeClass('active');
+	$(el).parent().addClass('active');
+	timeSpan = span; 
+	refreshMap();
+}
+
+function refreshMap(){
+	$.get( "/seam/resource/rest/games/list", { 
+		fromX: map.getBounds().getSouthWest().lng(), 
+		toX: map.getBounds().getNorthEast().lng(), 
+		fromY: map.getBounds().getSouthWest().lat(), 
+		toY: map.getBounds().getNorthEast().lat(),
+		ts: timeSpan})
+  .done(function( data ) {
+	
+	var results = JSON.parse(data);
+	var rendered = '';
+	var newMarkers = [];
+	for (var i = 0; i < results.length; i++){
+		var game = results[i];
+		var template = $('#gameTemplate').html();
+		Mustache.parse(template);   // optional, speeds up future uses
+		rendered += Mustache.render(template, game);
+		newMarkers.push(addMarker(new google.maps.LatLng(game.lat, game.lng),game.name,game.uniqueId ));
+	}
+	clearMarkers();
+	markers = newMarkers;
+	showAllMarkers();
+	$('#list').html(rendered);
+  });
 }
 
 function createGameMaps(){
@@ -110,10 +155,10 @@ function initialize(addMarker) {
 	
 
 	var myOptions = {
-		zoom : 14,
+		zoom : 5,
 		mapTypeId : google.maps.MapTypeId.ROADMAP
 	};
-	var map = new google.maps.Map(document.getElementById("map-canvas"),
+	map = new google.maps.Map(document.getElementById("map-canvas"),
 			myOptions);
 
 	// Try W3C Geolocation (Preferred)
@@ -128,6 +173,8 @@ function initialize(addMarker) {
 			        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=A|AE4D4D|000000'
 			    });
 			    marker.setMap(map);
+			    $("#createGame\\:lat").val(marker.position.lat());
+		        $("#createGame\\:lng").val(marker.position.lng());
 			}
 		}, function() {
 			handleNoGeolocation(browserSupportFlag);
@@ -154,4 +201,36 @@ function initialize(addMarker) {
 		}
 		map.setCenter(initialLocation);
 	}
+}
+
+
+
+//Add a marker to the map and push to the array.
+function addMarker(location, title, link) {
+  var marker = new google.maps.Marker({
+    position: location,
+    title: title,
+    map: map,
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+	    map.setCenter(marker.getPosition());
+  });
+  return marker;
+}
+
+// Sets the map on all markers in the array.
+function showAllMarkers() {
+	setAllMap(map);
+}
+
+function setAllMap(map){
+	for (var i = 0; i < markers.length; i++) {
+		markers[i].setMap(map);
+	}
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setAllMap(null);
+  markers = [];
 }
