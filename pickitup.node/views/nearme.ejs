@@ -1,0 +1,85 @@
+{% extends 'layout.ejs' %}
+	
+{% block content %}	
+<div class="container">
+	 <!-- Main component for a primary marketing message or call to action -->
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6 well">
+        <h1 style="text-align: center">Near Me</h1>
+        <div class="row">
+            <div class="col-lg-12" id="map-canvas" style="height: 300px;"></div>
+        </div>
+        <br/>
+        <div class="row">
+        	<ul class="nav nav-pills nav-justified">
+			  <li class="active">
+			    <a href="#" onclick="setTimeSpan(this,0)">
+			      <span id="games0" class="badge pull-right"></span>
+			      Next 2 hours
+			    </a>
+			  </li>
+			  <li>
+			    <a href="#" onclick="setTimeSpan(this,1)">
+			      <span id="games1" class="badge pull-right"></span>
+			      Today
+			    </a>
+			  </li>
+			  <li>
+			    <a href="#" onclick="setTimeSpan(this,2)">
+			      <span id="games2" class="badge pull-right">3</span>
+			      Tomorrow
+			    </a>
+			  </li>
+			  <li>
+			    <a href="#" onclick="setTimeSpan(this,3)">
+			      <span id="games3" class="badge pull-right">3</span>
+			      Next week
+			    </a>
+			  </li>
+			</ul>
+        </div>
+        <div id="list"></div>
+      </div>
+      <div class="col-lg-3"></div>
+</div>
+
+{% endblock %}
+{% block pageJs %}
+  <script>
+  	function toggleGameJoin(el,uniqueId){
+	if ($(el).hasClass('joined')) {
+		$.post( "/nearme/leave/"+uniqueId, function( data ) {
+			$(el).html('Join &#187;').removeClass('btn-danger').addClass('btn-primary');
+		});
+	} else {
+		$.post( "/nearme/join/"+uniqueId, function( data ) {
+			$(el).html('Leave &#187;').removeClass('btn-primary').addClass('btn-danger');
+		});
+	}
+	$(el).toggleClass('joined')
+}
+
+      $(function(){
+          nearMeMaps();
+      });
+  </script>
+	    <script id="gameTemplate" type="x-tmpl-mustache">
+{% raw %}
+<div class="row">
+<div class="col-lg-12 well">
+<h5>
+<span class="badge" style="background-color: #AE4D4D; color: #000"></span> {{name}}<div class="pull-right">Posted By: <a href="#">{{createdBy}}</a></div>
+</h5>
+Comments: {{description}}
+<br/>
+<span style="font-weight: 600;">Date:</span> {{date}}
+<br/><br/>
+<div class="game-buttons">
+{{#alreadyJoined}}<a class="btn btn-sm btn-danger btn-join joined" role="button" onclick="toggleGameJoin(this,'{{uniqueId}}')">Leave &#187;</a>{{/alreadyJoined}}
+{{^alreadyJoined}}<a class="btn btn-sm btn-primary btn-join" role="button" onclick="toggleGameJoin(this,'{{uniqueId}}')">Join &#187;</a>{{/alreadyJoined}}
+</div>
+</div>
+</div>
+{% endraw %}
+		</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'layout.ejs' %}
+
+{% block content %}		
+		<div class="container">
+
+			<!-- Main component for a primary marketing message or call to action -->
+			<div class="jumbotron pickItOpacity">
+				<h1>Pick It Up!</h1>
+				<p>Pick It Up is an online community of basketball players looking to play pickup basketball.</p>
+				<p>Please click on "Games Near Me" to join a game or "Create Game" to create a game that your friends can join.</p>
+				{% if !userAuthenticated %}
+					<p>
+						<a href="/signup" role="button" class="btn btn-lg btn-primary">Sign Up! &#187;</a>
+					</p>
+				{% endif %}
+				        <br/>
+			        <p>
+			            This is something I would definitely use whenever I feel like balling! - Jeroen Meeus (Basketball Player, Leuven)
+			        </p>
+			        <p>
+			            PickItUp is easy, fast and looking slick. I'd sign up the first day it were online. - David Van der Mullen (Basketball Player, Brussels)
+			        </p>
+			        <p>
+			            Really cool idea.. Make sure you have all technical stuff ligned up and position yourself well to your users.
+			From there, this could take off! - Steven Vansina (Marketing Manager, Stievie)
+			        </p>
+							
+			</div>
+
+		</div>
+{% endblock %}
