@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<!--
+/*
+ * jQuery File Upload Plugin Basic Demo 1.2.4
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2013, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery File Upload Demo - Basic version</title>
+<!-- Bootstrap styles -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<!-- Generic page styles -->
+<link rel="stylesheet" href="/css/style.css">
+<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+<link rel="stylesheet" href="/css/jquery.fileupload.css">
+</head>
+<body>
+<div class="container">
+    <h1>jQuery File Upload Demo</h1>
+    <h2 class="lead">Basic version</h2>
+    <br>
+    <!-- The fileinput-button span is used to style the file input field as button -->
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Select picture...</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" type="file" name="files[]">
+    </span>
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="/js/vendor/jquery.ui.widget.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="/js/jquery.fileupload.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="/js/bootstrap.min.js"></script>
+<script>
+$(function () {
+    'use strict';
+    $('#fileupload').fileupload({
+        url: '/upload/',
+        dataType: 'json',
+        done: function (e, data) {
+        	$('.fileinput-button').hide();
+            $.each(data.result.files, function (index, file) {
+                $('<div><img src="'+file.url+'" style="width: 400px"/><a href="#" class="remove-button">Remove</a></div>').appendTo('#files');
+            });
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+});
+$(document).on('click', '.remove-button', function(e){
+	$(this).parent().remove();
+	$('.fileinput-button').show();
+});
+</script>
+</body> 
+</html>
