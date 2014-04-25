@@ -27,14 +27,14 @@ router.post('/nearme/leave/:uniqueId*', gamecontroller.leave_game);
 
 router.get('/created', gamecontroller.list_created);
 
-
+router.get('/game/:uniqueId*', gamecontroller.show_game);
 
 router.get('/list', gamecontroller.list_games);
 router.get('/count', gamecontroller.count_games);
-router.get('/test', function(req, res, next){
-	var date = req.query.date;
-	var format = req.query.format;
-	res.send({date: date, format: format,result: moment(date, format)});
+
+router.get('/upload/test', function(req, res, next){
+	res.render('basic', {
+	});
 });
 
 module.exports = router;

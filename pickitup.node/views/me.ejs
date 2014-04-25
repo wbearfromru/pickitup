@@ -5,10 +5,10 @@
 	
 	      <!-- Main component for a primary marketing message or call to action -->
 	      <div class="col-lg-3 well" style="opacity: 0.9;">
-	          <img class="img-circle" src="/img/1618374_10152628986164027_41873271_o.jpg" style="width: 200px; height: 200px;" alt="Generic placeholder image"/>
+	          <img class="img-circle" src="{{player.picture}}" style="width: 200px; height: 200px;" alt="Generic placeholder image"/>
 	          <br/>
 	          <p>
-	              <span style="font-weight: 600;">Name:</span> {{player.firstname}} #{player.lastname}
+	              <span style="font-weight: 600;">Name:</span> {{player.screenName}} 
 	              <br/>
 	              <span style="font-weight: 600;">Birthday:</span> {{player.dateOfBirth}}
 	              <br/>
@@ -16,7 +16,7 @@
 	              <br/>
 	              <span style="font-weight: 600;">Position:</span> Point Gaurd
 	              <br/>
-	              <span style="font-weight: 600;">About:</span>{{player.about}}
+	              <span style="font-weight: 600;">About:</span>{{player.description}}
 	          </p>
 	      </div>
 	      <div class="col-lg-1"></div>

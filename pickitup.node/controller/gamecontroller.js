@@ -2,8 +2,10 @@
 // Routes to CRUD users.
 
 var Game = require('../model/game');
+var User = require('../model/user');
 var Location = require('../model/location');
 var moment = require('moment');
+var async = require('async');
 
 /**
  * GET /users
@@ -17,7 +19,6 @@ exports.create = function(req, res, next) {
 };
 
 exports.create_proceed = function(req, res, next) {
-
 	// Build objects from request
 	var gameData = {
 			title : req.body.title,
@@ -32,6 +33,8 @@ exports.create_proceed = function(req, res, next) {
 			lng : parseFloat(req.body.lng),
 			uniqueId : Math.random().toString(36).substr(2, 10)
 	};
+	
+	console.log('file ' + JSON.stringify(req.files));
 
 	// Validate posted data
 	var hasErrors = false;
@@ -72,10 +75,34 @@ exports.create_proceed = function(req, res, next) {
 		function(err, game) {
 			if (err)
 				return next(err);
-			res.redirect('/');
+			res.redirect('/nearme');
 		}
 	);
 
+};
+
+exports.show_game = function(req, res, next) {
+	var gameUniqueId = req.param('uniqueId');
+	var userAuthenticated = (req.session.isLoggedIn == true);
+	
+	async.series({
+		game: function(callback){
+			Game.find(gameUniqueId, callback);
+	    },
+	    players: function(callback){
+	    	User.getByGameId(gameUniqueId,callback);
+	    },
+	},
+	function(err, results) {
+		if (err)
+			return next(err);
+		res.render('game', {
+			userAuthenticated : userAuthenticated,
+			game: results.game,
+			players: results.players,
+		});
+	}
+	);
 };
 
 exports.list_games = function(req, res, next) {

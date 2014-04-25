@@ -34,6 +34,14 @@ Object.defineProperty(User.prototype, 'lastname', {
 		this._node.data['lastname'] = lastname;
 	}
 });
+Object.defineProperty(User.prototype, 'dateOfBirth', {
+	get: function () {
+		return this._node.data['dateOfBirth'];
+	},
+	set: function (dateOfBirth) {
+		this._node.data['dateOfBirth'] = dateOfBirth;
+	}
+});
 Object.defineProperty(User.prototype, 'email', {
 	get: function () {
 		return this._node.data['email'];
@@ -56,6 +64,22 @@ Object.defineProperty(User.prototype, 'uniqueId', {
 	},
 	set: function (uniqueId) {
 		this._node.data['uniqueId'] = uniqueId;
+	}
+});
+Object.defineProperty(User.prototype, 'picture', {
+	get: function () {
+		return this._node.data['picture'];
+	},
+	set: function (picture) {
+		this._node.data['picture'] = picture;
+	}
+});
+Object.defineProperty(User.prototype, 'description', {
+	get: function () {
+		return this._node.data['description'];
+	},
+	set: function (description) {
+		this._node.data['description'] = description;
 	}
 });
 
@@ -208,6 +232,25 @@ User.getByUniqueId = function (uniqueId, callback) {
         //FIXME What if there is none?
         callback(null, new User(results[0]['user']));
     });
+};
+
+User.getByGameId = function(gameUniqueId, callback) {
+	var query = [
+	             'match (user: Player)-[r:playes]->(game: Game {uniqueId : {uniqueId}})',
+	             'return user'
+	         ].join('\n');
+
+     var params = {
+		 uniqueId: gameUniqueId
+     };
+     
+     db.query(query, params, function (err, results) {
+         if (err) return callback(err);
+         var users = results.map(function (result) {
+             return new User(result['user']);
+         });
+         callback(null, users);
+     });
 };
 
 // creates the user and persists (saves) it to the db, incl. indexing it:

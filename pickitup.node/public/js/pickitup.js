@@ -24,6 +24,15 @@ function nearMeMaps(){
     google.maps.event.addListener(map, 'zoom_changed', function() {
     	getEvents(map);
     });
+    
+    refreshMap();
+}
+
+function createGameMap(lat,lng, title){
+	map = Tools.initializeMap('map-canvas');
+	var initialLocation = new google.maps.LatLng(lat, lng);
+	map.setCenter(initialLocation);
+	addMarker(initialLocation, title);
 }
 
 var updateGamesTimeOut = null;

@@ -5,6 +5,7 @@
 	<h1 style="text-align: center">Create Account</h1>
 	<div class="row">
 		<div class="col-lg-12 well">
+
 			<form role="form" method="POST">
 				<div class="form-group{% if errors.firstname %} has-error{% endif %}">
 					<label class="control-label" for="firstname">First Name</label> 
@@ -46,6 +47,18 @@
 					<label for="description">About Me</label>
 					<textarea id="description" name="description" class="form-control">{{data.description}}</textarea>
 				</div>
+				
+				<div class="form-group">
+				    <span class="btn btn-success fileinput-button">
+				        <i class="glyphicon glyphicon-plus"></i>
+				        <span>Select picture...</span>
+				        <!-- The file input field used as target for the file upload widget -->
+				        <input id="fileupload" type="file">
+				    </span>
+				    <div id="pictures"> 
+				    </div>
+				    <input type="hidden" name="picture" id="picture"> 
+			    </div>
 				<button type="submit" role="button" class="btn btn-lg btn-primary">Submit</button>
 			</form>
 		</div>
@@ -58,11 +71,33 @@
 
 {% endblock %}
 {% block pageJs %}
+	<script src="/js/jquery.ui.widget.js" type="text/javascript"></script>
+	<script src="/js/jquery.fileupload.js" type="text/javascript"></script>
 	<script>
         $(function(){
 			$('#dateOfBirthPicker').datetimepicker({
 				pickTime: false,
 			});
+
+		    'use strict';
+		    $('#fileupload').fileupload({
+		        url: '/upload/',
+		        dataType: 'json',
+		        done: function (e, data) {
+		        	$('.fileinput-button').hide();
+		            $.each(data.result.files, function (index, file) {
+		                $('<div><img src="'+file.url+'" style="width: 400px"/><a href="#" class="remove-button">Remove</a></div>').appendTo('#pictures');
+		                $('#picture').val(file.url);
+		            });
+		        }
+		    }).prop('disabled', !$.support.fileInput)
+		        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+		    $(document).on('click', '.remove-button', function(e){
+		    	$(this).parent().remove();
+		    	$('.fileinput-button').show();
+		    	$('#picture').val(null);
+		    });
         });
 	</script>
 {% endblock %}

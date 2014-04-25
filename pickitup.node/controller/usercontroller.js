@@ -10,7 +10,6 @@ var async = require('async');
 exports.index = function(req, res, next) {
 	var userAuthenticated = (req.session.isLoggedIn == true);
 	res.render('index', {
-		title : 'title',
 		userAuthenticated : userAuthenticated
 	});
 };
@@ -18,7 +17,6 @@ exports.index = function(req, res, next) {
 exports.login = function(req, res, next) {
 	var userAuthenticated = (req.session.isLoggedIn == true);
 	res.render('login', {
-		title : 'title',
 		userAuthenticated : userAuthenticated
 	});
 };
@@ -31,12 +29,10 @@ exports.login_proceed = function(req, res, next) {
 	        if (user.password == req.body.password){
 	        	req.session.isLoggedIn = true;
 	        	req.session.userUniqueId = user.uniqueId;
-	        	console.log('User uniqueid: ' + user.uniqueId);
-	        	res.redirect('/');
+	        	res.redirect('/nearme');
 	        } else {
 	        	req.session.isLoggedIn = false;
 	        	res.render('login', {
-	        		title : 'title',
 	        		userAuthenticated : false,
 	        		username: req.body.username,
 	        		hasErrors: true
@@ -81,7 +77,6 @@ exports.me = function(req, res, next) {
       if (err) return next(err);
       //Here locals will be populated with 'user' and 'posts'
       res.render('me', {
-			title : 'title',
 			player: user,
 			games: games,
 			userAuthenticated : userAuthenticated
@@ -94,6 +89,8 @@ exports.signup = function(req, res, next) {
 	});
 };
 exports.signup_proceed = function(req, res, next) {
+	console.log(JSON.stringify(req.files));		
+	
 	var errors = {};
 	var hasErrors = false;
 	var firstname = req.body.firstname;
@@ -103,6 +100,8 @@ exports.signup_proceed = function(req, res, next) {
 	var description = req.body.description;
 	var playerSex = req.body.playerSex;
 	var dateOfBirth = req.body.dateOfBirth;
+	var picture = req.body.picture;
+	
 	if (isEmpty(firstname)){
 		errors.firstname = true;
 		hasErrors = true;
@@ -129,13 +128,13 @@ exports.signup_proceed = function(req, res, next) {
         lastname: lastname,
         email: email,
         password: password,
-        desctiption: description,
+        description: description,
         playerSex: playerSex,
-        dateOfBirth: dateOfBirth
+        dateOfBirth: dateOfBirth,
+        picture: picture
     };
 	if (hasErrors){
 		res.render('signup', {
-    		title : 'title',
     		userAuthenticated : false,
     		data: data,
     		errors: errors,
@@ -158,7 +157,6 @@ exports.creategame = function(req, res, next) {
 exports.nearme = function(req, res, next) {
 	var userAuthenticated = (req.session.isLoggedIn == true);
 	res.render('nearme', {
-		title : 'title',
 		userAuthenticated : userAuthenticated
 	});
 };

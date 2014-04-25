@@ -63,6 +63,7 @@ Game.list = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
         'and game.startDate > {startDate} and game.startDate < {endDate}',
         'optional match (p:Player {uniqueId: {userUniqueId}})-[pl:playes]->(game)',
 		'return game,location,count(p) as alreadyJoined, creator',
+		'order by game.startDate, game.duration, game.title',
     ].join('\n');
 
     var params = {
@@ -131,14 +132,22 @@ Game.count = function (fromX,toX,fromY,toY, userUniqueId, callback) {
     };
     
     db.query(query, params, function (err, results) {
-        if (err) return callback(err);
-        var games = {
-				games0: results[0]['games0'],
-				games1: results[0]['games1'],
-				games2: results[0]['games2'],
-				games3: results[0]['games3'],
-            };
-        callback(null, games);
+    	if (err)
+			return callback(err);
+		var games = {};
+		var games0 = results[0]['games0'];
+		var games1 = results[0]['games1'];
+		var games2 = results[0]['games2'];
+		var games3 = results[0]['games3'];
+		if (games0 > 0)
+			games.games0 = games0;
+		if (games1 > 0)
+			games.games1 = games1;
+		if (games2 > 0)
+			games.games2 = games2;
+		if (games3 > 0)
+			games.games3 = games3;
+		callback(null, games);
     });
 };
 
@@ -196,24 +205,11 @@ Game.list_created = function (userUniqueId, maincallback) {
             };
         });
         async.forEach(games, function(game, callback) {
-        	var query = [
-	             'match (user: Player)-[r:playes]->(game: Game {uniqueId : {uniqueId}})',
-	             'return user'
-	         ].join('\n');
-
-	         var params = {
-        		 uniqueId: game.uniqueId
-	         };
-	         
-	         db.query(query, params, function (err, results) {
-	             if (err) return callback(err);
-	             console.log(JSON.stringify(results));
-	             var users = results.map(function (result) {
-	                 return new User(result['user']);
-	             });
-	             game.players = users;
-	             callback(null);
-	         });
+        	User.getByGameId(game.uniqueId, function(err, users){
+        		if (err) return callback(err);
+        		game.players = users;
+        		callback(null);
+        	});
         }, function(err) {
             //Tell the user about the great success
             maincallback(err, games);
@@ -243,6 +239,36 @@ Game.join = function(userUniqueId, gameUniqueId, callback) {
          callback(null, result);
      });
 }
+
+Game.find = function(gameUniqueId, callback) {
+	var query = [
+	             'match (g: Game {uniqueId:{gameUniqueId}})-[r:appear_at]->(l:Location)',
+	             'return g, l',
+	             ].join('\n');
+	
+	var params = {
+			gameUniqueId: gameUniqueId,
+	};
+	
+	db.query(query, params, function (err, results) {
+		console.log('err' + err);
+		console.log(JSON.stringify(results));
+		if (err) return callback(err);
+		var game = {};
+		if (results.length > 0){
+			game.title = results[0]['g'].data.title;
+			game.uniqueId = results[0]['g'].data.uniqueId;
+			game.startDate = moment(results[0]['g'].data.startDate,'YYYYMMDDHHmmss').format('DD/MM/YYYY hh:mm');
+			game.duration = results[0]['g'].data.duration;
+			game.description = results[0]['g'].data.description;
+			game.location = {};
+			game.location.lat = results[0]['l'].data.lat;
+			game.location.lng = results[0]['l'].data.lng;
+		}
+		console.log('game: ' + JSON.stringify(game));
+		callback(null, game);
+	});
+};
 
 Game.leave = function(userUniqueId, gameUniqueId, callback) {
 	var query = [

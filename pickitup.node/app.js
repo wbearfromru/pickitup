@@ -6,17 +6,38 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig = require('swig');
 var session = require('cookie-session');
+var upload = require('jquery-file-upload-middleware');
+
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
 
+
 app.engine('ejs', swig.renderFile);
+
+//Development
+app.set('view cache', false);
+//To disable Swig's cache, do the following:
+swig.setDefaults({ cache: false });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// upload handler setup
+upload.configure({
+    uploadDir: __dirname + '/public/uploads',
+    uploadUrl: '/uploads',
+    imageVersions: {
+        thumbnail: {
+            width: 80,
+            height: 80
+        }
+    }
+});
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -28,6 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/upload', upload.fileHandler());
 	
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
