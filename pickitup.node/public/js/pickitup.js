@@ -16,7 +16,7 @@ const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function nearMeMaps(){
 	map = Tools.initializeMap('map-canvas');
 	centerMapOnCurrentLocation(function(err,location){
-		
+		refreshMap();
 	});
     google.maps.event.addListener(map, 'center_changed', function() {
     	getEvents(map);
@@ -25,7 +25,6 @@ function nearMeMaps(){
     	getEvents(map);
     });
     
-    refreshMap();
 }
 
 function createGameMap(lat,lng, title){

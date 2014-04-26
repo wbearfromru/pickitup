@@ -233,6 +233,23 @@ User.getByUniqueId = function (uniqueId, callback) {
         callback(null, new User(results[0]['user']));
     });
 };
+User.getByFbId = function (fbId, callback) {
+	var query = [
+	             'MATCH (user:Player {fb_id: {fbId}})',
+	             'RETURN user',
+	             ].join('\n');
+	
+	var params = {
+			fbId : fbId
+	};
+	
+	db.query(query, params, function (err, results) {
+		if (err) return callback(err);
+		//FIXME What if there is none?
+		console.log(JSON.stringify(results));
+		callback(null, new User(results[0]['user']));
+	});
+};
 
 User.getByGameId = function(gameUniqueId, callback) {
 	var query = [

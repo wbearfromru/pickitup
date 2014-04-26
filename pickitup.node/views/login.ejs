@@ -19,6 +19,7 @@
                     </div>
                     <input type="submit" role="button" value="Login" class="btn btn-lg btn-primary"/>
               </form>
+              <a href="#" role="button" class="btn btn-lg btn-primary" id="fbLogin">Login with FB</a>
             </div>
         </div>
        
@@ -27,4 +28,59 @@
       </div>
       <div class="col-lg-3"></div>
 
+{% endblock %}
+{% block pageJs %}
+	<div id="fb-root"></div>
+    <script type="text/javascript">
+		window.fbAsyncInit = function() {
+			FB.init({
+			appId : '1432974593617773',
+			status : true,
+			xfbml : true
+			});
+		};
+		
+		
+		// Here we run a very simple test of the Graph API after login is successful. 
+		// This testAPI() function is only called in those cases. 
+		(function(d, s, id){
+		 var js, fjs = d.getElementsByTagName(s)[0];
+		 if (d.getElementById(id)) {return;}
+		 js = d.createElement(s); js.id = id;
+		 js.src = "//connect.facebook.net/en_US/all.js";
+		 fjs.parentNode.insertBefore(js, fjs);
+		 }(document, 'script', 'facebook-jssdk'));
+
+		 $('#fbLogin').on('click', function(){
+			 FB.getLoginStatus(function(response) {
+				 console.log(response);
+				  if (response.status === 'connected') {
+				    loginWithFb(response.authResponse.userID);
+				  } else {
+					  FB.login(function(response) {
+						  console.log(response);
+						if (response.authResponse) {
+							loginWithFb(response.authResponse.userID);
+						} 
+					});
+				  }
+				 });
+			 
+			return false;
+		 });
+
+		 function loginWithFb(fbid) {
+			$.post( "/login_fb", { 
+				fb_id: fbid,
+			},
+			function(data, textStatus) {
+		       if (data.redirect) {
+		           // data.redirect contains the string URL to redirect to
+		           window.location.href = data.redirect;
+		       } else {
+			       // TODO: inform user about fail 
+			   }
+			});
+		 }
+    </script>
 {% endblock %}

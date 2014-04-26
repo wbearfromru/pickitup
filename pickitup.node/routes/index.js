@@ -9,6 +9,7 @@ router.get('/', usercontroller.index);
 
 router.get('/login', usercontroller.login);
 router.post('/login', usercontroller.login_proceed);
+router.post('/login_fb', usercontroller.login_fb);
 
 router.get('/logout', usercontroller.logout);
 
@@ -16,6 +17,7 @@ router.get('/me', usercontroller.me);
 
 router.get('/signup', usercontroller.signup);
 router.post('/signup', usercontroller.signup_proceed);
+router.post('/signup_fb', usercontroller.signup_fb_proceed);
 
 router.get('/creategame', gamecontroller.create);
 router.post('/creategame', gamecontroller.create_proceed);

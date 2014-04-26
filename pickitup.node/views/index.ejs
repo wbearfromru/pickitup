@@ -12,6 +12,9 @@
 					<p>
 						<a href="/signup" role="button" class="btn btn-lg btn-primary">Sign Up! &#187;</a>
 					</p>
+					<p>
+						<a id="signupFB" href="#" role="button" class="btn btn-lg btn-primary">Sign Up with Facebook! &#187;</a>
+					</p>
 				{% endif %}
 				        <br/>
 			        <p>
@@ -29,3 +32,87 @@
 
 		</div>
 {% endblock %}
+{% block pageJs %}
+	<div id="fb-root"></div>
+    <script type="text/javascript">
+		window.fbAsyncInit = function() {
+			FB.init({
+			appId : '1432974593617773',
+			status : true,
+			xfbml : true
+			});
+			FB.Event.subscribe('auth.authResponseChange', function(response) {
+				if (response.status === 'connected') {
+					console.log(response);
+				} else {
+					FB.login(function(response) {
+						if (response.authResponse) {
+						  console.log('Welcome!  Fetching your information.... ');
+						  FB.api('/me', function(response) {
+						    console.log('Good to see you, ' + response.name + '.');
+						  });
+						} else {
+						  console.log('User cancelled login or did not fully authorize.');
+						}
+					});
+				}
+			});
+		};
+		
+		
+		// Here we run a very simple test of the Graph API after login is successful. 
+		// This testAPI() function is only called in those cases. 
+		function testAPI() {
+			console.log('Welcome! Fetching your information.... ');
+			FB.api('/me', function(response) {
+				console.log(response);
+				console.log('Good to see you, ' + response.name + '.');
+			});
+		}
+		
+		(function(d, s, id){
+		 var js, fjs = d.getElementsByTagName(s)[0];
+		 if (d.getElementById(id)) {return;}
+		 js = d.createElement(s); js.id = id;
+		 js.src = "//connect.facebook.net/en_US/all.js";
+		 fjs.parentNode.insertBefore(js, fjs);
+		 }(document, 'script', 'facebook-jssdk'));
+
+		 $('#signupFB').on('click',function(){
+			 FB.login(function(response) {
+				if (response.authResponse) {
+					 FB.api('/me', function(personaldata) {
+							if (personaldata && !personaldata.error) {
+								FB.api(
+								    "/me/picture",
+								    function (picturedata) {
+									    console.log(personaldata);
+										$.post( "/signup_fb", { 
+											firstname: personaldata.first_name,
+											lastname: personaldata.last_name,
+											email: personaldata.email,
+											fb_id: personaldata.id,
+											description: personaldata.about,
+											playerSex: personaldata.gender,
+											dateOfBirth: personaldata.birthday,
+											picture: picturedata.data.url,
+										},
+										function(data, textStatus) {
+									        if (data.redirect) {
+									            // data.redirect contains the string URL to redirect to
+									            window.location.href = data.redirect;
+									        }
+									    });
+								    }
+								);
+							}
+						 });
+				} else {
+				  console.log('User cancelled login or did not fully authorize.');
+				}
+			});
+			
+			 return false;
+		 });
+    </script>
+{% endblock %)

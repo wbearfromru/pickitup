@@ -39,6 +39,28 @@ exports.login_proceed = function(req, res, next) {
 	        	});
 	        }
 	    });
+};
+exports.login_fb = function(req, res, next) {
+	console.log('user id: ' + req.body.fb_id);
+	User.getByFbId(
+		req.body.fb_id,
+		function (err, user) {
+	        if (err) return next(err);
+	        console.log('user: ' + JSON.stringify(user));
+	        if (typeof user.uniqueId != 'undefined'){
+	        	req.session.isLoggedIn = true;
+				req.session.fbLoggedIn = true;
+	        	req.session.userUniqueId = user.uniqueId;
+	        	res.send({redirect: '/nearme'});
+	        } else {
+	        	req.session.isLoggedIn = false;
+	        	res.render('login', {
+	        		userAuthenticated : false,
+	        		username: req.body.username,
+	        		hasErrors: true
+	        	});
+	        }
+	    });
 	
 };
 
@@ -147,6 +169,45 @@ exports.signup_proceed = function(req, res, next) {
 		        if (err) return next(err);
 		        res.redirect('/');
 			}
+		);
+	}
+};
+exports.signup_fb_proceed = function(req, res, next) {
+	var errors = {};
+	var hasErrors = false;
+	var firstname = req.body.firstname;
+	var lastname = req.body.lastname;
+	var email = req.body.email;
+	var fb_id = req.body.fb_id;
+	var description = req.body.description;
+	var playerSex = req.body.playerSex;
+	var dateOfBirth = req.body.dateOfBirth;
+	var picture = req.body.picture;
+	
+	var data = {
+			firstname: firstname,
+			lastname: lastname,
+			email: email,
+			fb_id: fb_id,
+			description: description,
+			playerSex: playerSex,
+			dateOfBirth: dateOfBirth,
+			picture: picture
+	};
+	if (hasErrors){
+		res.render('/', {
+			userAuthenticated : false,
+		});
+	} else {
+		User.create(
+				data, 
+				function (err, user) {
+					if (err) return next(err);
+					req.session.isLoggedIn = true;
+					req.session.fbLoggedIn = true;
+		        	req.session.userUniqueId = user.uniqueId;
+		        	res.send({redirect: '/nearme'});
+				}
 		);
 	}
 };
