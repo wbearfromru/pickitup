@@ -1,37 +1,93 @@
 {% extends 'layout.ejs' %}
 
-{% block content %}		
-		<div class="container">
+{% block content %}
 
-			<!-- Main component for a primary marketing message or call to action -->
-			<div class="jumbotron pickItOpacity">
-				<h1>Pick It Up!</h1>
-				<p>Pick It Up is an online community of basketball players looking to play pickup basketball.</p>
-				<p>Please click on "Games Near Me" to join a game or "Create Game" to create a game that your friends can join.</p>
-				{% if !userAuthenticated %}
-					<p>
-						<a href="/signup" role="button" class="btn btn-lg btn-primary">Sign Up! &#187;</a>
-					</p>
-					<p>
-						<a id="signupFB" href="#" role="button" class="btn btn-lg btn-primary">Sign Up with Facebook! &#187;</a>
-					</p>
-				{% endif %}
-				        <br/>
-			        <p>
-			            This is something I would definitely use whenever I feel like balling! - Jeroen Meeus (Basketball Player, Leuven)
-			        </p>
-			        <p>
-			            PickItUp is easy, fast and looking slick. I'd sign up the first day it were online. - David Van der Mullen (Basketball Player, Brussels)
-			        </p>
-			        <p>
-			            Really cool idea.. Make sure you have all technical stuff ligned up and position yourself well to your users.
-			From there, this could take off! - Steven Vansina (Marketing Manager, Stievie)
-			        </p>
-							
-			</div>
+	<section id="main-slider" class="carousel">
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="container">
+                    <div class="carousel-content">
+                        <h1>PickItUp!</h1>
+                        <p class="lead">Find casual pickup games in your area!</p>
+						{% if !userAuthenticated %}
+							<p>
+								<a href="/signup" role="button" class="btn btn-lg btn-primary">Sign Up! &#187;</a>
+							</p>
+							<p>
+								<a id="signupFB" href="#" role="button" class="btn btn-lg btn-primary">Sign Up with Facebook! &#187;</a>
+							</p>
+						{% endif %}
+                    </div>
+                </div>
+            </div><!--/.item-->
+        </div><!--/.carousel-inner-->
+        <a class="prev" href="#main-slider" data-slide="prev"><i class="icon-angle-left"></i></a>
+        <a class="next" href="#main-slider" data-slide="next"><i class="icon-angle-right"></i></a>
+    </section><!--/#main-slider-->
 
-		</div>
+	<section id="services">
+        <div class="container">
+            <div class="box first">
+                <div class="row">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="center">
+                            <i class="icon-courts icon-md icon-color1"></i>
+                            <h4>Find Courts</h4>
+                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
+                        </div>
+                    </div><!--/.col-md-4-->
+                    <div class="col-md-4 col-sm-6">
+                        <div class="center">
+                            <i class="icon-players icon-md icon-color2"></i>
+                            <h4>Meet Players</h4>
+                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
+                        </div>
+                    </div><!--/.col-md-4-->
+                    <div class="col-md-4 col-sm-6">
+                        <div class="center">
+                            <i class="icon-ball icon-md icon-color3"></i>
+                            <h4>Start Playing</h4>
+                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
+                        </div>
+                    </div><!--/.col-md-4-->
+                </div><!--/.row-->
+            </div><!--/.box-->
+        </div><!--/.container-->
+    </section><!--/#services-->
+	
+	<section id="Testimonials">
+        <div class="container">
+            <div class="box first">
+				<div class="center">
+					<div class="testimonials">
+						<ul class="gallery-list">
+							<li class="active">
+								<blockquote>
+									<q> This is something I will definitely use whenever I feel like balling!</q>
+									<cite><strong>Jeroen Meeus</strong> -- Basketball Player, Leuven</cite>
+								</blockquote>
+							</li>
+							<li>
+								<blockquote>
+									<q>PickItUp is easy, fast and looking slick. I&#39;d sign up the first day it were online.</q>
+									<cite><strong>David Van der Mullen</strong> -- Basketball Player, Brussels</cite>
+								</blockquote>
+							</li>
+							<li>
+								<blockquote>
+									<q>Really cool idea.. Make sure you have all technical stuff ligned up and position yourself well to your users. From there, this could take off!</q>
+									<cite><strong>Steven Vansina</strong> -- Marketing Manager, Stievie</a></cite>
+								</blockquote>
+							</li>
+						</ul>
+					</div>
+				</div>
+            </div><!--/.box-->
+        </div><!--/.container-->
+    </section><!--/#services-->
+	
 {% endblock %}
+
 {% block pageJs %}
 	<div id="fb-root"></div>
     <script type="text/javascript">
@@ -115,4 +171,3 @@
 			 return false;
 		 });
     </script>
-{% endblock %)

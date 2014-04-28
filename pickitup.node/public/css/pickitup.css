@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 body{
-    background-image: url('/img/background.jpg');
+	
 }
 
 .pickItOpacity{
@@ -30,4 +30,79 @@ body{
   font-size: 200px;
   direction: ltr;
   cursor: pointer;
+}
+
+.testimonials-area .testimonials:after {
+	display:block;
+	clear:both;
+	content:'';
+}
+
+.testimonial-container {
+	-webkit-background-clip: border-box;
+	-webkit-background-origin: padding-box;
+	-webkit-background-size: auto;
+	-webkit-font-smoothing: antialiased;
+	background-attachment: scroll;
+	background-clip: border-box;
+	background-color: rgba(0, 0, 0, 0);
+	background-image: url('/img/grey_dash.gif'), url('/img/white_background_textured.jpg');
+	background-repeat: repeat-x, no-repeat;
+	background-origin: padding-box;
+	background-size: auto;
+	color: rgb(36, 60, 71);
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	height: 224.265625px;
+	line-height: 19.006000518798828px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 1px;
+}
+
+.testimonials {
+	margin: 0 auto;
+}
+
+blockquote {
+	display: block;
+	border: 0;
+}
+
+blockquote q {
+	display: block;
+	font: italic 1.077em/1.357em Georgia, "Times New Roman", Times, serif;
+	color: #243c47;
+}
+
+.gallery-list li {
+	list-style: none;
+}
+
+@font-face {
+	font-family: franchise;
+	src: url('/fonts/Franchise-Bold.ttf');
+} 
+
+
+#main-slider h1 {
+	font-family: franchise, serif;
+	margin: 0 auto;
+	
+}
+
+.btn-primary {
+	background-image: -webkit-linear-gradient(top,#ff8000 0,#ff7000 100%);
+	background-image: linear-gradient(to bottom,#ff8000 0,#ff7000 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff428bca', endColorstr='#ff2d6ca2', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+	background-repeat: repeat-x;
+	border-color: #2b669a;
 }
