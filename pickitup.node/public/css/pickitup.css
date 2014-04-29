@@ -10,10 +10,7 @@ and open the template in the editor.
 
 body {
   min-height: 2000px;
-}
-
-.navbar-static-top {
-  margin-bottom: 19px;
+  background-color: transparent;
 }
 
 .pickItOpacity{
@@ -34,6 +31,10 @@ body {
   font-size: 200px;
   direction: ltr;
   cursor: pointer;
+}
+
+#testimonials .box {
+  background: #f3f3f3;
 }
 
 .testimonials-area .testimonials:after {
@@ -102,16 +103,60 @@ blockquote q {
 
 }
 
-#main-slider h1 {
-	font-family: franchiseregular, serif;
-	margin: 0 auto;
-	font-size: 200px;
+/*These are the selectors for the PickItUp main title and subtext based on Screen Size*/
+
+@media(max-width:767px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 100px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 25px;
+	}
 }
 
-#main-slider .lead {
-	font-family: franchiseregular, serif;
-	font-size: 50px;
+@media(min-width:768px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 150px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 37px;
+	}
 }
+
+@media(min-width:992px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 200px;
+	}
+
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 50px;
+	}
+}
+
+@media(min-width:1200px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 200px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 50px;
+	}
+}
+
 
 .btn-primary {
 	background-image: -webkit-linear-gradient(top,#ff8000 0,#ff7000 100%);
@@ -123,12 +168,34 @@ blockquote q {
 }
 
 .navbar-brand {
-	margin: auto;
-	padding: 30px;
+	padding: 30px 0 30px 15px;
 	font-size: 18px;
+}
+
+.navbar>.container .navbar-brand {
+	margin-left: 0;
+}
+
+.navbar-nav.navbar-right:last-child {
+	margin-right: 0px;
 }
 
 .navbar-default .navbar-nav > li > a {
 	font-size: 18px;
 }
 
+#main-slider {
+  padding: 150px 0;
+}
+
+ul.gallery-list {
+	padding-left: 0px;
+}
+
+.navbar {
+	margin-bottom: 0px;
+}
+
+.navbar-toggle {
+	margin-top: 22px;
+}
