@@ -48,12 +48,12 @@ a:focus {
   z-index: 99999;
 }
 #main-slider {
-  background-image: url('/img/background.jpg');
+  background-image: url('/img/background_layered.png');
   background-attachment: fixed;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  padding: 200px 0;
+  padding: 240px 0 240px 0;
   color: #fff;
 }
 #main-slider .item {

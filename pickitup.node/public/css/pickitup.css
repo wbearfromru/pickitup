@@ -8,8 +8,12 @@ and open the template in the editor.
     Author     : JP
 */
 
-body{
-	
+body {
+  min-height: 2000px;
+}
+
+.navbar-static-top {
+  margin-bottom: 19px;
 }
 
 .pickItOpacity{
@@ -87,15 +91,26 @@ blockquote q {
 }
 
 @font-face {
-	font-family: franchise;
-	src: url('/fonts/Franchise-Bold.ttf');
-} 
+    font-family: 'franchiseregular';
+    src: url('/fonts/franchise-bold-webfont.eot');
+    src: url('/fonts/franchise-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/franchise-bold-webfont.woff') format('woff'),
+         url('/fonts/franchise-bold-webfont.ttf') format('truetype'),
+         url('/fonts/franchise-bold-webfont.svg#franchiseregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
 
+}
 
 #main-slider h1 {
-	font-family: franchise, serif;
+	font-family: franchiseregular, serif;
 	margin: 0 auto;
-	
+	font-size: 200px;
+}
+
+#main-slider .lead {
+	font-family: franchiseregular, serif;
+	font-size: 50px;
 }
 
 .btn-primary {
@@ -106,3 +121,14 @@ blockquote q {
 	background-repeat: repeat-x;
 	border-color: #2b669a;
 }
+
+.navbar-brand {
+	margin: auto;
+	padding: 30px;
+	font-size: 18px;
+}
+
+.navbar-default .navbar-nav > li > a {
+	font-size: 18px;
+}
+
