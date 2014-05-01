@@ -1,9 +1,8 @@
 // users.js
 // Routes to CRUD users.
 
-var Game = require('../model/game');
-var User = require('../model/user');
-var Location = require('../model/location');
+var GameHandling = require('../handling/gamehandling');
+var UserHandling = require('../handling/userhandling');
 var moment = require('moment');
 var async = require('async');
 
@@ -34,8 +33,6 @@ exports.create_proceed = function(req, res, next) {
 			uniqueId : Math.random().toString(36).substr(2, 10)
 	};
 	
-	console.log('file ' + JSON.stringify(req.files));
-
 	// Validate posted data
 	var hasErrors = false;
 	var errors = {};
@@ -68,7 +65,7 @@ exports.create_proceed = function(req, res, next) {
 	// If everything is ok let's store the game
 	var userUniqueId = req.session.userUniqueId;
 	gameData.startDate = moment(req.body.startDate,'DD/MM/YYYY HH:mm').format('YYYYMMDDHHmmss');
-	Game.create_on_location(
+	GameHandling.createOnLocation(
 		userUniqueId,
 		gameData,
 		locationData, 
@@ -87,10 +84,10 @@ exports.show_game = function(req, res, next) {
 	
 	async.series({
 		game: function(callback){
-			Game.find(gameUniqueId, callback);
+			GameHandling.getByUniqueId(gameUniqueId, callback);
 	    },
 	    players: function(callback){
-	    	User.getByGameId(gameUniqueId,callback);
+	    	UserHandling.getByGameId(gameUniqueId,callback);
 	    },
 	},
 	function(err, results) {
@@ -108,7 +105,7 @@ exports.show_game = function(req, res, next) {
 exports.list_games = function(req, res, next) {
 	var userUniqueId = req.session.userUniqueId;
 	var data = req.query;
-	Game.list(
+	GameHandling.listInArea(
 		parseFloat(data.fromX),
 		parseFloat(data.toX),
  		parseFloat(data.fromY), 
@@ -125,7 +122,7 @@ exports.list_games = function(req, res, next) {
 exports.count_games = function(req, res, next) {
 	var userUniqueId = req.session.userUniqueId;
 	var data = req.query;
-	Game.count(
+	GameHandling.countInArea(
 			parseFloat(data.fromX),
 			parseFloat(data.toX),
 			parseFloat(data.fromY), 
@@ -140,7 +137,7 @@ exports.count_games = function(req, res, next) {
 
 exports.list_created = function(req, res, next) {
 	var userUniqueId = req.session.userUniqueId;
-	Game.list_created(
+	GameHandling.listByUser(
 		userUniqueId,
 		function(err, games) {
 			if (err)
@@ -152,7 +149,7 @@ exports.list_created = function(req, res, next) {
 exports.join_game = function(req, res, next) {
 	var userUniqueId = req.session.userUniqueId;
 	var gameUniqueId = req.param('uniqueId');
-	Game.join(
+	GameHandling.joinGame(
 		userUniqueId,
 		gameUniqueId,
 		function(err, games) {
@@ -164,7 +161,7 @@ exports.join_game = function(req, res, next) {
 exports.leave_game = function(req, res, next) {
 	var userUniqueId = req.session.userUniqueId;
 	var gameUniqueId = req.param('uniqueId');
-	Game.leave(
+	GameHandling.leaveGame(
 			userUniqueId,
 			gameUniqueId,
 			function(err, games) {
