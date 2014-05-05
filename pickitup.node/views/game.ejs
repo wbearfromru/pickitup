@@ -31,7 +31,7 @@
 			<div class="form-group">
 				<label>Confirmed Players:</label>
 		        {% for player in players %}
-				<span class="label label-default">{{player.screenName}}</span>
+				<span class="label label-default"><a href="/player/{{player.uniqueId}}">{{player.screenName}}</a></span>
 				{% endfor %}
 			</div>
 		</div>

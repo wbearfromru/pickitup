@@ -23,7 +23,7 @@ exports.login_proceed = function(req, res, next) {
 		req.body.username,
 		function (err, user) {
 	        if (err) return next(err);
-	        if (user.password == req.body.password){
+	        if (user != null && user.password == req.body.password){
 	        	req.session.isLoggedIn = true;
 	        	req.session.userUniqueId = user.uniqueId;
 	        	res.redirect('/nearme');
@@ -70,6 +70,7 @@ exports.me = function(req, res, next) {
 	var userAuthenticated = (req.session.isLoggedIn == true);
 	var user = null;
 	var games = null;
+	var schedule = null;
 	async.series([
       //Load user to get userId first
       function (callback){
@@ -91,15 +92,42 @@ exports.me = function(req, res, next) {
   	        	}
   	      );
       },
+      function(callback) {
+			GameHandling.userSchedule(
+				userUniqueId,
+				function(err, games) {
+					if (err) return next(err);
+					schedule = games;
+					callback();
+				}
+			);
+      },
   ], function(err) { 
       if (err) return next(err);
       //Here locals will be populated with 'user' and 'posts'
       res.render('me', {
 			player: user,
 			games: games,
+			schedule: schedule,
 			userAuthenticated : userAuthenticated
 	  });
   });
+};
+
+exports.show_user = function(req, res, next) {
+	var userUniqueId = req.param('uniqueId');
+	var userAuthenticated = (req.session.isLoggedIn == true);
+      //Load user to get userId first
+	UserHandling.getByUniqueId(userUniqueId, function(err, foundUser) {
+		if (err)
+			return next(err);
+		
+		// Here locals will be populated with 'user' and 'posts'
+		res.render('player', {
+			player : foundUser,
+			userAuthenticated : userAuthenticated
+		});
+	});
 };
 
 exports.signup = function(req, res, next) {

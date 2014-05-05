@@ -133,45 +133,10 @@ function codeAddress(map, marker) {
 
 
 
-function getPlayerCal(){
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-
+function getPlayerCal(schedule){
     $('#calendar').fullCalendar({
-            editable: true,
-            events: [
-                    {
-                            id: 999,
-                            title: 'Wednesday Lunch BBall',
-                            start: new Date(y, m, d-4, 16, 0),
-                            allDay: false
-                    },
-                    {
-                            id: 999,
-                            title: 'Wednesday Lunch BBall',
-                            start: new Date(y, m, d+3, 16, 0),
-                            allDay: false
-                    },
-                    {
-                            title: 'Sat BBall',
-                            start: new Date(y, m, d-1, 10, 30),
-                            allDay: false
-                    },
-                    {
-                            title: 'Sunday Evening BBall',
-                            start: new Date(y, m, d, 19, 0),
-                            end: new Date(y, m, d, 22, 30),
-                            allDay: false
-                    },
-                    {
-                            title: 'BBall Tournament',
-                            start: new Date(y, m, 28),
-                            end: new Date(y, m, 29),
-                            url: 'http://google.com/'
-                    }
-            ]
+        editable: true,
+    	events: schedule
     });
 
 }

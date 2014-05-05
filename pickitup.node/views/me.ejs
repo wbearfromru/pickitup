@@ -83,7 +83,7 @@
 		                            <div class="row">
 		                                <label>Confirmed Players:</label>
 		                                {% for player in game.players %}
-										<span class="label label-default">{{player.screenName}}</span>
+										<span class="label label-default"><a href="/player/{{player.uniqueId}}">{{player.screenName}}</a></span>
 										{% endfor %}
 		                            </div>
 		                        </div>
@@ -101,7 +101,7 @@
 {% block pageJs %}
 	    <script>
 	        $(function(){
-	            getPlayerCal();
+	            getPlayerCal({{schedule|json|safe}});
 	        });
 	    </script>
 {% endblock %}

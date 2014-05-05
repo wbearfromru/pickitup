@@ -31,12 +31,11 @@ router.get('/created', gamecontroller.list_created);
 
 router.get('/game/:uniqueId*', gamecontroller.show_game);
 
+router.get('/player/:uniqueId*', usercontroller.show_user);
+
 router.get('/list', gamecontroller.list_games);
 router.get('/count', gamecontroller.count_games);
 
-router.get('/upload/test', function(req, res, next){
-	res.render('basic', {
-	});
-});
+router.get('/test', gamecontroller.user_schedule);
 
 module.exports = router;

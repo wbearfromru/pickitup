@@ -115,6 +115,7 @@ exports.list_games = function(req, res, next) {
 		function(err, games) {
 		if (err)
 			return next(err);
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 		res.send(games);
 	});
 };
@@ -131,6 +132,7 @@ exports.count_games = function(req, res, next) {
 			function(err, games) {
 				if (err)
 					return next(err);
+				res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 				res.send(games);
 			});
 };
@@ -167,6 +169,18 @@ exports.leave_game = function(req, res, next) {
 			function(err, games) {
 				if (err) return next(err);
 				res.send(true);
+			}
+	);
+};
+
+
+exports.user_schedule = function(req, res, next) {
+	var userUniqueId = req.session.userUniqueId;
+	GameHandling.userSchedule(
+			userUniqueId,
+			function(err, games) {
+				if (err) return next(err);
+				res.send(games);
 			}
 	);
 };
