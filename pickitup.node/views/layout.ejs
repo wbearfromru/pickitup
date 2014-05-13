@@ -39,6 +39,14 @@
 		  ga('send', 'pageview');
 		
 		</script>
+		
+		<script>
+			var signUpFB = document.getElementById('signupFB');
+			addListener(signUpFB, 'click', function() {
+				ga('send', 'event', 'SignUpFB', 'click', 'signup-button');
+			});
+		</script>
+		
 	</body>
     
 </html>
