@@ -7,8 +7,8 @@ var moment = require('moment');
 /* GET home page. */
 router.get('/', usercontroller.index);
 
-router.get('/login', usercontroller.login);
-router.post('/login', usercontroller.login_proceed);
+/*router.get('/login', usercontroller.login);*/
+router.get('/login', usercontroller.login_proceed);
 router.post('/login_fb', usercontroller.login_fb);
 
 router.get('/logout', usercontroller.logout);

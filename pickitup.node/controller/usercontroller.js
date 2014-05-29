@@ -20,20 +20,18 @@ exports.login = function(req, res, next) {
 
 exports.login_proceed = function(req, res, next) {
 	UserHandling.getByEmail(
-		req.body.username,
+		req.query.username,
 		function (err, user) {
 	        if (err) return next(err);
-	        if (user != null && user.password == req.body.password){
-	        	req.session.isLoggedIn = true;
-	        	req.session.userUniqueId = user.uniqueId;
-	        	res.redirect('/nearme');
+	        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+	        if (user != null && user.password == req.query.password){
+				res.jsonp({
+					id: 'qsdfljqdsf',
+					userid: user.uniqueId,
+					role: 'player'
+				});
 	        } else {
-	        	req.session.isLoggedIn = false;
-	        	res.render('login', {
-	        		userAuthenticated : false,
-	        		username: req.body.username,
-	        		hasErrors: true
-	        	});
+	        	res.jsonp({result: 'failed'});
 	        }
 	    });
 };

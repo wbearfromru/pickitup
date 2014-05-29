@@ -1,0 +1,224 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 5, 2014, 5:18:47 PM
+    Author     : JP
+*/
+
+body {
+  min-height: 2000px;
+  background-color: transparent;
+}
+
+.pickItOpacity{
+    opacity: 0.8;
+}
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+#testimonials .box {
+  background: #f3f3f3;
+}
+
+.testimonials-area .testimonials:after {
+	display:block;
+	clear:both;
+	content:'';
+}
+
+.testimonial-container {
+	-webkit-background-clip: border-box;
+	-webkit-background-origin: padding-box;
+	-webkit-background-size: auto;
+	-webkit-font-smoothing: antialiased;
+	background-attachment: scroll;
+	background-clip: border-box;
+	background-color: rgba(0, 0, 0, 0);
+	background-image: url('../img/grey_dash.gif'), url('../img/white_background_textured.jpg');
+	background-repeat: repeat-x, no-repeat;
+	background-origin: padding-box;
+	background-size: auto;
+	color: rgb(36, 60, 71);
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	height: 224.265625px;
+	line-height: 19.006000518798828px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 1px;
+}
+
+.testimonials {
+	margin: 0 auto;
+}
+
+blockquote {
+	display: block;
+	border: 0;
+}
+
+blockquote q {
+	display: block;
+	font: italic 1.077em/1.357em Georgia, "Times New Roman", Times, serif;
+	color: #243c47;
+}
+
+.gallery-list li {
+	list-style: none;
+}
+
+@font-face {
+    font-family: 'franchiseregular';
+    src: url('../fonts/franchise-bold-webfont.eot');
+    src: url('../fonts/franchise-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/franchise-bold-webfont.woff') format('woff'),
+         url('../fonts/franchise-bold-webfont.ttf') format('truetype'),
+         url('../fonts/franchise-bold-webfont.svg#franchiseregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+/*These are the selectors for the PickItUp main title and subtext based on Screen Size*/
+
+@media(max-width:767px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 100px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 25px;
+	}
+}
+
+@media(min-width:768px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 150px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 37px;
+	}
+}
+
+@media(min-width:992px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 200px;
+	}
+
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 50px;
+	}
+}
+
+@media(min-width:1200px){
+	#main-slider h1 {
+		font-family: franchiseregular, serif;
+		margin: 0 auto;
+		font-size: 200px;
+	}
+	
+	#main-slider .lead {
+		font-family: franchiseregular, serif;
+		font-size: 50px;
+	}
+}
+
+
+.btn-primary {
+	background-image: -webkit-linear-gradient(top,#ff8000 0,#ff7000 100%);
+	background-image: linear-gradient(to bottom,#ff8000 0,#ff7000 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff428bca', endColorstr='#ff2d6ca2', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+	background-repeat: repeat-x;
+	border-color: #2b669a;
+}
+
+.navbar-brand {
+	padding: 30px 0 30px 15px;
+	font-size: 18px;
+}
+
+.navbar>.container .navbar-brand {
+	margin-left: 0;
+}
+
+.navbar-nav.navbar-right:last-child {
+	margin-right: 0px;
+}
+
+.navbar-default .navbar-nav > li > a {
+	font-size: 18px;
+}
+
+#main-slider {
+  padding: 150px 0;
+}
+
+ul.gallery-list {
+	padding-left: 0px;
+}
+
+.navbar {
+	margin-bottom: 0px;
+}
+
+.navbar-toggle {
+	margin-top: 22px;
+}
+
+#main-slider-near-me {
+  background-image: url('../img/background2_layered.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  padding: 100px 0 240px 0;
+}
+
+#main-slider-create-game {
+  background-image: url('../img/background3_layered.png');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  height: 150vh;
+  padding: 100px 0 100px 0;
+ }
+ 
+ body {
+	min-height: 1000px;
+ }
