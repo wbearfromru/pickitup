@@ -8,7 +8,23 @@ phonecatControllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthSer
 } ]);
 
 
-phonecatControllers.controller('PhoneListCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+phonecatControllers.controller('HomeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+	$scope.AuthService = AuthService;
+} ]);
+
+phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+	$scope.AuthService = AuthService;
+	
+	 angular.element(document).ready(function () {
+		 nearMeMaps();
+     });
+} ]);
+
+phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+	$scope.AuthService = AuthService;
+} ]);
+
+phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
 	$scope.AuthService = AuthService;
 } ]);
 
