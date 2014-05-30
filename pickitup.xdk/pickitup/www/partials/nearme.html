@@ -11,32 +11,49 @@
 			<div class="row">
 				<ul class="nav nav-pills nav-justified">
 				<li class="active">
-					<a data-target="#additionalSelection" data-toggle="tab" onclick="setTimeSpan(this,0)">
+					<a data-target="#" data-toggle="tab" ng-click="setTimeSpan(0)">
 					<span id="games0" class="badge pull-right"></span>
 					Next 2 hours
 					</a>
 				</li>
 				<li>
-					<a data-target="#additionalSelection" data-toggle="tab" onclick="setTimeSpan(this,1)">
+					<a data-target="#" data-toggle="tab" ng-click="setTimeSpan(1)">
 					<span id="games1" class="badge pull-right"></span>
 					Today
 					</a>
 				</li>
 				<li>
-					<a data-target="#additionalSelection" data-toggle="tab" onclick="setTimeSpan(this,2)">
+					<a data-target="#" data-toggle="tab" ng-click="setTimeSpan(2)">
 					<span id="games2" class="badge pull-right"></span>
 					Tomorrow
 					</a>
 				</li>
 				<li>
-					<a data-target="#additionalSelection" data-toggle="tab" onclick="setTimeSpan(this,3)">
+					<a data-target="#" data-toggle="tab" ng-click="setTimeSpan(3)">
 					<span id="games3" class="badge pull-right"></span>
 					Next week
 					</a>
 				</li>
 				</ul>
 			</div>
-			<div id="list"></div>
+			<div id="list">
+				<div class="row">
+					<div class="col-lg-12 well" ng-repeat="game in games">
+						<h5>
+							<span class="badge" style="background-color: #AE4D4D; color: #000"></span>
+							<a href="/game/{{game.uniqueId}}">{{name}}</a>
+							<div class="pull-right">
+								Posted By: <a href="#">{{game.createdBy}}</a>
+							</div>
+						</h5>
+						Comments: {{game.description}} <br /> 
+						<span style="font-weight: 600;">Date:</span>{{game.date}} <br />
+						<br />
+						<div class="game-buttons">
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="col-lg-3"></div>
 	</div>

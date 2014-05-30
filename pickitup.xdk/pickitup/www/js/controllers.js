@@ -12,12 +12,57 @@ phonecatControllers.controller('HomeCtrl', [ '$scope', '$window', 'AuthService',
 	$scope.AuthService = AuthService;
 } ]);
 
-phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'GameService', 'Map', function($scope, $window, AuthService, GameService, Map) {
 	$scope.AuthService = AuthService;
+	$scope.timeSpan = 0;
+	$scope.games = [];
 	
-	 angular.element(document).ready(function () {
-		 nearMeMaps();
-     });
+	$scope.setTimeSpan = function(timeSpan) {
+		$scope.timeSpan = timeSpan;
+		GameService.getGames(timeSpan).success(function(results) {
+			$scope.games = results;
+			var newMarkers = [];
+			for (var i = 0; i < results.length; i++) {
+				var game = results[i];
+				newMarkers.push(Map.addMarker(new google.maps.LatLng(game.lat, game.lng), game.name, game.uniqueId));
+			}
+			Map.clearMarkers();
+			Map.setMarkers(newMarkers);
+			Map.showAllMarkers();
+		});
+	};
+
+	GameService.init('map-canvas');
+	
+	Map.centerOnUserLocation(function(err, location) {
+		$scope.setTimeSpan($scope.timeSpan);
+		
+		/*google.maps.event.addListener(map, 'center_changed', function() {
+			$scope.setTimeSpan($scope.timeSpan);
+		});
+		
+		google.maps.event.addListener(map, 'zoom_changed', function() {
+			$scope.setTimeSpan($scope.timeSpan);
+		});*/
+	});
+	
+
+	// $.get( "/count", {
+	// fromX: map.getBounds().getSouthWest().lng(),
+	// toX: map.getBounds().getNorthEast().lng(),
+	// fromY: map.getBounds().getSouthWest().lat(),
+	// toY: map.getBounds().getNorthEast().lat()
+	// }
+	// ).done(function( results ) {
+	// $('#games0').html(results.games0);
+	// $('#games1').html(results.games1);
+	// $('#games2').html(results.games2);
+	// $('#games3').html(results.games3);
+	// }
+	// );
+	// }
+
+
 } ]);
 
 phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
@@ -50,6 +95,7 @@ phonecatControllers.controller('LoginCtrl', [ '$scope', '$routeParams', '$window
 		AuthService.login(credentials).
 		then(function (data) {
 			$window.sessionStorage.isAuthenticated = true;
+			$window.sessionStorage.userUniqueId = data.data.userid;
 	        $scope.status = 'Success';
 	        $scope.data = data;
 	        $window.location = '#/home';
@@ -58,3 +104,4 @@ phonecatControllers.controller('LoginCtrl', [ '$scope', '$routeParams', '$window
 	    });
 	};
 } ]);
+
