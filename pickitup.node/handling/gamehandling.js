@@ -86,6 +86,8 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
     		endDate: getEndDate(ts).format('YYYYMMDDHHmmss'),
     };
     
+    console.log('params ' + params);
+    
     db.query(query, params, function (err, results) {
         if (err) return callback(err);
         var games = results.map(function (result) {

@@ -24,7 +24,6 @@ function nearMeMaps(){
     google.maps.event.addListener(map, 'zoom_changed', function() {
     	getEvents(map);
     });
-    
 }
 
 function createGameMap(lat,lng, title){
@@ -61,7 +60,6 @@ function refreshMap(){
 		toY: map.getBounds().getNorthEast().lat(),
 		ts: timeSpan})
   .done(function( results ) {
-	
 	var rendered = '';
 	var newMarkers = [];
 	for (var i = 0; i < results.length; i++){

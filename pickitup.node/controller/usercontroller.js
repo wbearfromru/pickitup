@@ -35,6 +35,7 @@ exports.login_proceed = function(req, res, next) {
 	        }
 	    });
 };
+
 exports.login_fb = function(req, res, next) {
 	UserHandling.getByFbId(
 		req.body.fb_id,
@@ -193,6 +194,7 @@ exports.signup_proceed = function(req, res, next) {
 		);
 	}
 };
+
 exports.signup_fb_proceed = function(req, res, next) {
 	var hasErrors = false;
 	var firstname = req.body.firstname;

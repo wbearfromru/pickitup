@@ -32,7 +32,7 @@ phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService
 		});
 	};
 
-	GameService.init('map-canvas');
+	Map.createMap('map-canvas');
 	
 	Map.centerOnUserLocation(function(err, location) {
 		$scope.setTimeSpan($scope.timeSpan);
@@ -65,8 +65,15 @@ phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService
 
 } ]);
 
-phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
-	$scope.AuthService = AuthService;
+phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$window', 'AuthService','Map', function($scope, $window, AuthService, Map) {
+	$scope.AuthService = AuthService;	
+	Map.createMap('map-canvas');
+	Map.centerOnUserLocation(function(err, location){
+		if (err)
+			location = map.getCenter();
+		marker = Map.addMarker(location);
+		//setTrackerLocation(location);
+	});
 } ]);
 
 phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {

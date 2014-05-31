@@ -103,7 +103,6 @@ exports.show_game = function(req, res, next) {
 };
 
 exports.list_games = function(req, res, next) {
-	var userUniqueId = req.session.userUniqueId;
 	var data = req.query;
 	GameHandling.listInArea(
 		parseFloat(data.fromX),
@@ -111,12 +110,12 @@ exports.list_games = function(req, res, next) {
  		parseFloat(data.fromY), 
  		parseFloat(data.toY),
 		data.ts, 
-		userUniqueId,
+		data.userUniqueId,
 		function(err, games) {
 		if (err)
 			return next(err);
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.send(games);
+		res.jsonp(games);
 	});
 };
 
