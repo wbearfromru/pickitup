@@ -110,7 +110,7 @@ exports.list_games = function(req, res, next) {
 		if (err)
 			return next(err);
 		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-		res.jsonp(games);
+		res.json(games);
 	});
 };
 
@@ -143,28 +143,22 @@ exports.list_created = function(req, res, next) {
 	);
 };
 exports.join_game = function(req, res, next) {
-	var userUniqueId = req.session.userUniqueId;
+	var userUniqueId = req.user.uniqueId;
 	var gameUniqueId = req.param('uniqueId');
-	GameHandling.joinGame(
-		userUniqueId,
-		gameUniqueId,
-		function(err, games) {
-			if (err) return next(err);
-			res.send(true);
-		}
-	);
+	GameHandling.joinGame(userUniqueId, gameUniqueId, function(err, games) {
+		if (err)
+			return next(err);
+		res.json(true);
+	});
 };
 exports.leave_game = function(req, res, next) {
-	var userUniqueId = req.session.userUniqueId;
+	var userUniqueId = req.user.uniqueId;
 	var gameUniqueId = req.param('uniqueId');
-	GameHandling.leaveGame(
-			userUniqueId,
-			gameUniqueId,
-			function(err, games) {
-				if (err) return next(err);
-				res.send(true);
-			}
-	);
+	GameHandling.leaveGame(userUniqueId, gameUniqueId, function(err, games) {
+		if (err)
+			return next(err);
+		res.json(true);
+	});
 };
 
 

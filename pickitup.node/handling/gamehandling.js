@@ -100,7 +100,8 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
 				lng: location.lng,
 				uniqueId: game.uniqueId,
 				alreadyJoined: result['alreadyJoined'] > 0,
-				createdBy: creator.screenName
+				createdBy: creator.screenName,
+				createdByUniqueId: creator.uniqueId
             };
         });
         callback(null, games);

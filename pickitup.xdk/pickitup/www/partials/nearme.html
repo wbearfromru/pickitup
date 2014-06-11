@@ -37,19 +37,21 @@
 				</ul>
 			</div>
 			<div id="list">
-				<div class="row">
-					<div class="col-lg-12 well" ng-repeat="game in games">
+				<div class="row" ng-repeat="game in games">
+					<div class="col-lg-12 well" >
 						<h5>
 							<span class="badge" style="background-color: #AE4D4D; color: #000"></span>
-							<a href="/game/{{game.uniqueId}}">{{name}}</a>
+							<a href="#/game/{{game.uniqueId}}">{{game.name}}</a>
 							<div class="pull-right">
-								Posted By: <a href="#">{{game.createdBy}}</a>
+								Posted By: <a href="#/player/{{game.createdByUniqueId}}">{{game.createdBy}}</a>
 							</div>
 						</h5>
 						Comments: {{game.description}} <br /> 
 						<span style="font-weight: 600;">Date:</span>{{game.date}} <br />
 						<br />
 						<div class="game-buttons">
+							<a ng-if="game.alreadyJoined" class="btn btn-sm btn-danger btn-join joined" role="button" ng-click="leaveGame(game)">Leave &#187;</a>
+							<a ng-if="!game.alreadyJoined" class="btn btn-sm btn-primary btn-join" role="button" ng-click="joinGame(game)">Join &#187;</a>
 						</div>
 					</div>
 				</div>

@@ -24,12 +24,12 @@ phonecatApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/creategame', {
 		templateUrl : 'partials/creategame.html',
 		controller : 'CreateGameCtrl'
-	}).when('/phones/:phoneId', {
-		templateUrl : 'partials/phone-detail.html',
-		controller : 'PhoneDetailCtrl'
 	}).when('/game/:uniqueId', {
 		templateUrl : 'partials/game.html',
 		controller : 'GameDetailCtrl'
+	}).when('/player/:uniqueId', {
+		templateUrl : 'partials/player.html',
+		controller : 'PlayerDetailCtrl'
 	}).otherwise({
 		redirectTo : '/home'
 	});

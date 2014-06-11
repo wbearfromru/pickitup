@@ -131,16 +131,19 @@ exports.me = function(req, res, next) {
 
 exports.show_user = function(req, res, next) {
 	var userUniqueId = req.param('uniqueId');
-	var userAuthenticated = (req.session.isLoggedIn == true);
       //Load user to get userId first
-	UserHandling.getByUniqueId(userUniqueId, function(err, foundUser) {
+	UserHandling.getByUniqueId(userUniqueId, function(err, user) {
 		if (err)
 			return next(err);
 		
 		// Here locals will be populated with 'user' and 'posts'
-		res.render('player', {
-			player : foundUser,
-			userAuthenticated : userAuthenticated
+		res.json({
+			player: {
+				screenName : user.screenName,
+				dateOfBirth : user.dateOfBirth,
+				description : user.description,
+				uniqueId : user.uniqueId
+			},
 		});
 	});
 };

@@ -37,6 +37,18 @@ phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService
 			$scope.games3 = results.games3;
 		});
 	};
+	
+	$scope.joinGame = function(game){
+		PickitUpService.joinGame(game.uniqueId).success(function(){
+			game.alreadyJoined = true;
+		});
+	};
+	
+	$scope.leaveGame = function(game) {
+		PickitUpService.leaveGame(game.uniqueId).success(function(){
+			game.alreadyJoined = false;
+		});
+	};
 
 	Map.createMap('map-canvas');
 	
@@ -124,12 +136,21 @@ phonecatControllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'Au
 	
 	PickitUpService.gameInfo($routeParams.uniqueId).success(function(data){
 		$scope.game = data.game;
+		$scope.players = data.players;
 		
 		Map.createMap('map-canvas');
 		var initialLocation = new google.maps.LatLng($scope.game.location.lat, $scope.game.location.lng);
 		Map.map.setCenter(initialLocation);
 		Map.addMarker(initialLocation, $scope.game.title);
 	});
+} ]);
+phonecatControllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', function($scope, $routeParams, AuthService, PickitUpService) {
+	$scope.AuthService = AuthService;
+	
+	PickitUpService.playerInfo($routeParams.uniqueId).success(function(data){
+		$scope.player = data.player;
+	});
+	
 } ]);
 
 

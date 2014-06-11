@@ -46,8 +46,20 @@ phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', functio
 				lng : game.location.lng
 			});
 		},
+		joinGame : function(uniqueId) {
+			return $http.post("http://localhost:3000/api/nearme/join/" + uniqueId, {
+			});
+		},
+		leaveGame : function(uniqueId) {
+			return $http.post("http://localhost:3000/api/nearme/leave/" + uniqueId, {
+			});
+		},
 		gameInfo : function(uniqueId) {
 			return $http.get("http://localhost:3000/api/game/"+uniqueId, {
+			});
+		}, 
+		playerInfo : function(uniqueId) {
+			return $http.get("http://localhost:3000/api/player/"+uniqueId, {
 			});
 		}, 
 		myDetails : function(){
