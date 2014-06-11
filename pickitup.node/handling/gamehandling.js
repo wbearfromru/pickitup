@@ -90,6 +90,7 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
     
     db.query(query, params, function (err, results) {
         if (err) return callback(err);
+        console.log('games1');
         var games = results.map(function (result) {
         	var game = result['game'].data;
         	var location = result['location'].data;
@@ -106,6 +107,7 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
 				createdBy: creator.screenName
             };
         });
+        console.log('games99');
         callback(null, games);
     });
 };

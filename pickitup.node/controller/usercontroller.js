@@ -3,6 +3,8 @@
 var UserHandling = require('../handling/userhandling');
 var GameHandling = require('../handling/gamehandling');
 var async = require('async');
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
 
 exports.index = function(req, res, next) {
 	var userAuthenticated = (req.session.isLoggedIn == true);
@@ -19,21 +21,31 @@ exports.login = function(req, res, next) {
 };
 
 exports.login_proceed = function(req, res, next) {
-	UserHandling.getByEmail(
-		req.query.username,
-		function (err, user) {
-	        if (err) return next(err);
-	        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	        if (user != null && user.password == req.query.password){
-				res.jsonp({
-					id: 'qsdfljqdsf',
-					userid: user.uniqueId,
-					role: 'player'
-				});
-	        } else {
-	        	res.jsonp({result: 'failed'});
-	        }
-	    });
+	UserHandling.getByEmail(req.body.username, function(err, user) {
+		if (err)
+			return next(err);
+
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		if (user == null || user.password != req.body.password) {
+			res.send(401, 'Wrong user or password');
+			return;
+		}
+
+		var profile = {
+			first_name : user.firstname,
+			last_name : user.lastname,
+			uniqueId : user.uniqueId
+		};
+		// We are sending the profile inside the token
+		var token = jwt.sign(profile, 'LFKJLKSDFOIAJU1098179', {
+			expiresInMinutes : 60 * 5
+		});
+		
+		res.json({
+			token : token
+		});
+
+	});
 };
 
 exports.login_fb = function(req, res, next) {
@@ -65,7 +77,7 @@ exports.logout = function(req, res, next) {
 };
 
 exports.me = function(req, res, next) {
-	var userUniqueId = req.session.userUniqueId;
+	var userUniqueId = req.user.uniqueId;
 	var userAuthenticated = (req.session.isLoggedIn == true);
 	var user = null;
 	var games = null;
@@ -105,7 +117,12 @@ exports.me = function(req, res, next) {
       if (err) return next(err);
       //Here locals will be populated with 'user' and 'posts'
       res.render('me', {
-			player: user,
+			player: {
+				firstname : user.firstname,
+				lastname : user.lastname,
+				email : user.email,
+				
+			},
 			games: games,
 			schedule: schedule,
 			userAuthenticated : userAuthenticated

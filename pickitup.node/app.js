@@ -4,28 +4,13 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var swig = require('swig');
-var session = require('cookie-session');
 var upload = require('jquery-file-upload-middleware');
-
-
+var expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
-
-
-app.engine('ejs', swig.renderFile);
-
-//Development
-app.set('view cache', false);
-//To disable Swig's cache, do the following:
-swig.setDefaults({ cache: false });
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
 // upload handler setup
 upload.configure({
@@ -39,16 +24,27 @@ upload.configure({
     }
 });
 
+// Allow CORS
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+    next();
+};
+
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(session({secret: 'LFKJLKSDFOIAJU1098179'}));
+app.use(allowCrossDomain);
 app.use(express.static(path.join(__dirname, 'public')));
 
+//We are going to protect /api routes with JWT
+app.use('/api', expressJwt({secret:  'LFKJLKSDFOIAJU1098179'}));
+
 app.use('/', routes);
-app.use('/users', users);
 app.use('/upload', upload.fileHandler());
 	
 /// catch 404 and forwarding to error handler

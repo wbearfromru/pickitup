@@ -51,19 +51,13 @@ exports.create_proceed = function(req, res, next) {
 
 	// Data is not valid, return user to his form
 	if (hasErrors){
-		var userAuthenticated = (req.session.isLoggedIn == true);
-		res.render('creategame', {
-			title : 'title',
-			userAuthenticated : userAuthenticated,
-			game: gameData,
-			location: locationData,
-			errors: errors
-		});
+		res.statusCode = 400;
+		res.json(errors);
 		return;
 	} 
 	
 	// If everything is ok let's store the game
-	var userUniqueId = req.session.userUniqueId;
+	var userUniqueId = req.user.uniqueId;
 	gameData.startDate = moment(req.body.startDate,'DD/MM/YYYY HH:mm').format('YYYYMMDDHHmmss');
 	GameHandling.createOnLocation(
 		userUniqueId,
@@ -72,7 +66,8 @@ exports.create_proceed = function(req, res, next) {
 		function(err, game) {
 			if (err)
 				return next(err);
-			res.redirect('/nearme');
+			res.statusCode = 200;
+			res.json('ok');
 		}
 	);
 
@@ -104,13 +99,15 @@ exports.show_game = function(req, res, next) {
 
 exports.list_games = function(req, res, next) {
 	var data = req.query;
+	console.log('user' + req.user);
+	var userUniqueId = req.user.uniqueId;
 	GameHandling.listInArea(
 		parseFloat(data.fromX),
 		parseFloat(data.toX),
  		parseFloat(data.fromY), 
  		parseFloat(data.toY),
 		data.ts, 
-		data.userUniqueId,
+		userUniqueId,
 		function(err, games) {
 		if (err)
 			return next(err);
@@ -120,7 +117,7 @@ exports.list_games = function(req, res, next) {
 };
 
 exports.count_games = function(req, res, next) {
-	var userUniqueId = req.session.userUniqueId;
+	var userUniqueId = req.user.uniqueId;
 	var data = req.query;
 	GameHandling.countInArea(
 			parseFloat(data.fromX),
