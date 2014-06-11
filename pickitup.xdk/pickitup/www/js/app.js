@@ -32,3 +32,7 @@ phonecatApp.config([ '$routeProvider', function($routeProvider) {
 	});
 } ]);
 
+phonecatApp.config(function($httpProvider) {
+	$httpProvider.interceptors.push('AuthInterceptor');
+});
+

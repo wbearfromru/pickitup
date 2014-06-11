@@ -10,68 +10,84 @@ phonecatServices.factory('Phone', ['$resource',
     });
   }]);
 
-phonecatServices.factory('GameService', [ '$http', '$window', 'Map', function($http, $window, Map) {
+phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', function($http, $window, Map) {
 	return {
 		init : function(container) {
 			Map.createMap(container);
 		},
 		getGames : function(timeSpan) {
-			return $http.jsonp("http://localhost:3000/list", {
+			return $http.get("http://localhost:3000/api/list", {
 				params : {
-					callback : 'JSON_CALLBACK',
-					format : 'json',
 					fromX : Map.map.getBounds().getSouthWest().lng(),
 					toX : Map.map.getBounds().getNorthEast().lng(),
 					fromY : Map.map.getBounds().getSouthWest().lat(),
 					toY : Map.map.getBounds().getNorthEast().lat(),
 					ts : timeSpan,
-					userUniqueId: $window.sessionStorage.userUniqueId
 				}
 			});
+		},
+		getGamesCount : function(){
+			return $http.get("http://localhost:3000/api/count", {
+				params : {
+					fromX : Map.map.getBounds().getSouthWest().lng(),
+					toX : Map.map.getBounds().getNorthEast().lng(),
+					fromY : Map.map.getBounds().getSouthWest().lat(),
+					toY : Map.map.getBounds().getNorthEast().lat()
+				}
+			});
+		},
+		submitGame : function(game){
+			return $http.post("http://localhost:3000/api/creategame", {
+				title : game.title,
+				startDate : game.startDate,
+				duration : game.duration,
+				description : game.description,
+				lat : game.location.lat,
+				lng : game.location.lng
+			});
+		},
+		myDetails : function(){
+			return $http.get("http://localhost:3000/api/me");
 		}
 	};
 } ]);
 
-phonecatServices.factory('AuthService', ['$http', '$window', 'Session', function ($http, $window, Session) {
+phonecatServices.factory('AuthService', ['$http', '$window', function ($http, $window) {
   return {
     login: function (credentials) {
-      return $http.jsonp('http://localhost:3000/login', {
-          params: {
-              callback: 'JSON_CALLBACK',
-              format:'json',
-              username: credentials.username,
-              password: credentials.password
-          }
+      return $http.post('http://localhost:3000/login', {
+          username: credentials.username,
+          password: credentials.password
       });
     },
     logout: function(){
     	delete $window.sessionStorage.isAuthenticated;
+    	$location.path("/");
     },
     isAuthenticated: function () {
       return $window.sessionStorage.isAuthenticated;
-    },
-    isAuthorized: function (authorizedRoles) {
-      if (!angular.isArray(authorizedRoles)) {
-         authorizedRoles = [authorizedRoles];
-      }
-      return (this.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
     }
   };
 } ]);
 
-phonecatServices.service('Session', function() {
-	this.create = function(sessionId, userId, userRole) {
-		this.id = sessionId;
-		this.userId = userId;
-		this.userRole = userRole;
+phonecatApp.factory('AuthInterceptor',  ['$rootScope', '$q', '$window', function($rootScope, $q, $window) {
+	return {
+		request : function(config) {
+			config.headers = config.headers || {};
+			if ($window.sessionStorage.token) {
+				config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+			}
+			return config;
+		},
+		response : function(response) {
+			if (response.status === 401) {
+				// handle the case where the user is not authenticated
+			}
+			return response || $q.when(response);
+		}
 	};
-	this.destroy = function() {
-		this.id = null;
-		this.userId = null;
-		this.userRole = null;
-	};
-	return this;
-})
+}]);
+
 
 phonecatServices.service('Map', function() {
 	
@@ -115,23 +131,23 @@ phonecatServices.service('Map', function() {
 	};
 
 	// Sets the map on all markers in the array.
-	this.showAllMarkers = function() {
+	service.showAllMarkers = function() {
 		service.setAllMap(service.map);
 	};
 
 	// Removes the markers from the map, but keeps them in the array.
-	this.clearMarkers = function() {
+	service.clearMarkers = function() {
 		setAllMap(null);
 		service.markers = [];
 	};
 	
-	function setAllMap(map){
+	service.setAllMap = function(map){
 		for (var i = 0; i < service.markers.length; i++) {
 			service.markers[i].setMap(service.map);
 		}
 	};
 	
-	function setMarkers(markers){
+	service.setMarkers = function(markers){
 		service.clearMarkers();
 		service.markers = markers;
 		for (var i = 0; i < service.markers.length; i++) {
