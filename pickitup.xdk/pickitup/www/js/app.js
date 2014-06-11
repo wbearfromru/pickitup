@@ -27,6 +27,9 @@ phonecatApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/phones/:phoneId', {
 		templateUrl : 'partials/phone-detail.html',
 		controller : 'PhoneDetailCtrl'
+	}).when('/game/:uniqueId', {
+		templateUrl : 'partials/game.html',
+		controller : 'GameDetailCtrl'
 	}).otherwise({
 		redirectTo : '/home'
 	});

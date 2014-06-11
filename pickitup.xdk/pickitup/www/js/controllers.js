@@ -105,30 +105,31 @@ phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthS
 
 } ]);
 
-phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', function($scope, $window, AuthService, PickitUpService) {
+phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService',  function($scope, $window, AuthService, PickitUpService) {
 	$scope.AuthService = AuthService;
 	
 	PickitUpService.myDetails().success(function(data){
-		$scope.player = data.data.player;
-		$scope.games = data.data.games;
+		$scope.player = data.player;
+		$scope.games = data.games;
 		
 	    $('#calendar').fullCalendar({
 	        editable: true,
-	    	events: data.data.schedule
+	    	events: data.schedule
 	    });
 	});
 } ]);
 
-phonecatControllers.controller('PhoneDetailCtrl', [ '$scope', '$routeParams', 'Phone', function($scope, $routeParams, Phone) {
-	$scope.phone = Phone.get({
-		phoneId : $routeParams.phoneId
-	}, function(phone) {
-		$scope.mainImageUrl = phone.images[0];
+phonecatControllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', 'Map', function($scope, $routeParams, AuthService,PickitUpService, Map) {
+	$scope.AuthService = AuthService;
+	
+	PickitUpService.gameInfo($routeParams.uniqueId).success(function(data){
+		$scope.game = data.game;
+		
+		Map.createMap('map-canvas');
+		var initialLocation = new google.maps.LatLng($scope.game.location.lat, $scope.game.location.lng);
+		Map.map.setCenter(initialLocation);
+		Map.addMarker(initialLocation, $scope.game.title);
 	});
-
-	$scope.setImage = function(imageUrl) {
-		$scope.mainImageUrl = imageUrl;
-	}
 } ]);
 
 

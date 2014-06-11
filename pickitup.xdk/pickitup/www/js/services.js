@@ -46,6 +46,10 @@ phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', functio
 				lng : game.location.lng
 			});
 		},
+		gameInfo : function(uniqueId) {
+			return $http.get("http://localhost:3000/api/game/"+uniqueId, {
+			});
+		}, 
 		myDetails : function(){
 			return $http.get("http://localhost:3000/api/me");
 		}

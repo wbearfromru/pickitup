@@ -78,7 +78,6 @@ exports.logout = function(req, res, next) {
 
 exports.me = function(req, res, next) {
 	var userUniqueId = req.user.uniqueId;
-	var userAuthenticated = (req.session.isLoggedIn == true);
 	var user = null;
 	var games = null;
 	var schedule = null;
@@ -116,16 +115,16 @@ exports.me = function(req, res, next) {
   ], function(err) { 
       if (err) return next(err);
       //Here locals will be populated with 'user' and 'posts'
-      res.render('me', {
+      res.json({
 			player: {
-				firstname : user.firstname,
-				lastname : user.lastname,
+				screenName : user.screenName,
+				dateOfBirth : user.dateOfBirth,
 				email : user.email,
-				
+				description : user.description,
+				uniqueId : user.uniqueId
 			},
 			games: games,
-			schedule: schedule,
-			userAuthenticated : userAuthenticated
+			schedule: schedule
 	  });
   });
 };

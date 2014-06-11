@@ -20,8 +20,6 @@ exports.getByUniqueId = function(gameUniqueId, callback) {
 	};
 	
 	db.query(query, params, function (err, results) {
-		console.log('err' + err);
-		console.log(JSON.stringify(results));
 		if (err) return callback(err);
 		var game = {};
 		if (results.length > 0){
@@ -86,11 +84,9 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
     		endDate: getEndDate(ts).format('YYYYMMDDHHmmss'),
     };
     
-    console.log('params ' + params);
     
     db.query(query, params, function (err, results) {
         if (err) return callback(err);
-        console.log('games1');
         var games = results.map(function (result) {
         	var game = result['game'].data;
         	var location = result['location'].data;
@@ -107,7 +103,6 @@ exports.listInArea = function (fromX,toX,fromY,toY, ts,userUniqueId, callback) {
 				createdBy: creator.screenName
             };
         });
-        console.log('games99');
         callback(null, games);
     });
 };
@@ -215,7 +210,6 @@ exports.joinGame = function(userUniqueId, gameUniqueId, callback) {
      };
 
      db.query(query, params, function (err, results) {
-    	 console.log('err' + err);
          if (err) return callback(err);
          var result = results.length > 0;
          callback(null, result);
@@ -235,7 +229,6 @@ exports.leaveGame = function(userUniqueId, gameUniqueId, callback) {
      };
 
      db.query(query, params, function (err, results) {
-    	 console.log('err' + err);
          if (err) return callback(err);
          callback(null, 'ok');
      });
@@ -262,7 +255,7 @@ exports.userSchedule = function (userUniqueId, callback) {
                 start: moment(game.startDate,'YYYYMMDDHHmmss').format('YYYY-MM-DD HH:mm:ss'),
                 end: getEndDateFromDuration(game.startDate, game.duration),
                 allDay: false,
-                url: '/game/'+game.uniqueId,
+                url: '#/game/'+game.uniqueId,
             };
         });
         callback(null, games);

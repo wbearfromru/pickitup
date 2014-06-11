@@ -75,7 +75,6 @@ exports.create_proceed = function(req, res, next) {
 
 exports.show_game = function(req, res, next) {
 	var gameUniqueId = req.param('uniqueId');
-	var userAuthenticated = (req.session.isLoggedIn == true);
 	
 	async.series({
 		game: function(callback){
@@ -88,8 +87,8 @@ exports.show_game = function(req, res, next) {
 	function(err, results) {
 		if (err)
 			return next(err);
-		res.render('game', {
-			userAuthenticated : userAuthenticated,
+		res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+		res.json({
 			game: results.game,
 			players: results.players,
 		});
@@ -99,7 +98,6 @@ exports.show_game = function(req, res, next) {
 
 exports.list_games = function(req, res, next) {
 	var data = req.query;
-	console.log('user' + req.user);
 	var userUniqueId = req.user.uniqueId;
 	GameHandling.listInArea(
 		parseFloat(data.fromX),
