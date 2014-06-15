@@ -1,14 +1,14 @@
 'use strict';
 
 /* App Module */
-var phonecatApp = angular.module('phonecatApp', [
+var pickitupApp = angular.module('pickitup', [
   'ngRoute',
-  'phonecatControllers',
-  'phonecatFilters',
-  'phonecatServices'
+  'controllers',
+  'filters',
+  'services'
 ]);
 
-phonecatApp.config([ '$routeProvider', function($routeProvider) {
+pickitupApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', {
 		templateUrl : 'partials/home.html',
 		controller : 'HomeCtrl'
@@ -35,7 +35,25 @@ phonecatApp.config([ '$routeProvider', function($routeProvider) {
 	});
 } ]);
 
-phonecatApp.config(function($httpProvider) {
+pickitupApp.factory('AuthInterceptor',  ['$rootScope', '$q', '$window', function($rootScope, $q, $window) {
+	return {
+		request : function(config) {
+			config.headers = config.headers || {};
+			if ($window.sessionStorage.token) {
+				config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+			}
+			return config;
+		},
+		response : function(response) {
+			if (response.status === 401) {
+				// handle the case where the user is not authenticated
+			}
+			return response || $q.when(response);
+		}
+	};
+}]);
+
+pickitupApp.config(function($httpProvider) {
 	$httpProvider.interceptors.push('AuthInterceptor');
 });
 

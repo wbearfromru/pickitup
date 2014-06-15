@@ -1,18 +1,18 @@
 'use strict';
 
 /* Controllers */
-var phonecatControllers = angular.module('phonecatControllers', []);
+var controllers = angular.module('controllers', []); 
 
-phonecatControllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+controllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
 	$scope.AuthService = AuthService;
 } ]);
 
 
-phonecatControllers.controller('HomeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+controllers.controller('HomeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
 	$scope.AuthService = AuthService;
 } ]);
 
-phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', 'Map', function($scope, $window, AuthService, PickitUpService, Map) {
+controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', 'Map', function($scope, $window, AuthService, PickitUpService, Map) {
 	$scope.AuthService = AuthService;
 	$scope.timeSpan = 0;
 	$scope.games = [];
@@ -66,7 +66,7 @@ phonecatControllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService
 	
 } ]);
 
-phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService','PickitUpService', 'Map', function($scope, $location, AuthService, PickitUpService, Map) {
+controllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService','PickitUpService', 'Map', function($scope, $location, AuthService, PickitUpService, Map) {
 	$scope.AuthService = AuthService;
 	$scope.game = {};
 	$scope.game.location = {};
@@ -117,7 +117,7 @@ phonecatControllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthS
 
 } ]);
 
-phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService',  function($scope, $window, AuthService, PickitUpService) {
+controllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService',  function($scope, $window, AuthService, PickitUpService) {
 	$scope.AuthService = AuthService;
 	
 	PickitUpService.myDetails().success(function(data){
@@ -131,7 +131,7 @@ phonecatControllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthServ
 	});
 } ]);
 
-phonecatControllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', 'Map', function($scope, $routeParams, AuthService,PickitUpService, Map) {
+controllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', 'Map', function($scope, $routeParams, AuthService,PickitUpService, Map) {
 	$scope.AuthService = AuthService;
 	
 	PickitUpService.gameInfo($routeParams.uniqueId).success(function(data){
@@ -144,7 +144,7 @@ phonecatControllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'Au
 		Map.addMarker(initialLocation, $scope.game.title);
 	});
 } ]);
-phonecatControllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', function($scope, $routeParams, AuthService, PickitUpService) {
+controllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', function($scope, $routeParams, AuthService, PickitUpService) {
 	$scope.AuthService = AuthService;
 	
 	PickitUpService.playerInfo($routeParams.uniqueId).success(function(data){
@@ -154,7 +154,7 @@ phonecatControllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', '
 } ]);
 
 
-phonecatControllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window,$location, AuthService) {
+controllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window,$location, AuthService) {
 	$scope.credentials = {
 		username : '',
 		password : ''

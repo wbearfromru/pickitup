@@ -1,22 +1,17 @@
 'use strict';
 
 /* Services */
-var phonecatServices = angular.module('phonecatServices', ['ngResource']);
+var services = angular.module('services', ['ngResource']); 
 
-phonecatServices.factory('Phone', ['$resource',
-  function($resource){
-    return $resource('phones/:phoneId.json', {}, {
-      query: {method:'GET', params:{phoneId:'phones'}, isArray:true}
-    });
-  }]);
+var server = 'http://localhost:3000';
 
-phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', function($http, $window, Map) {
+services.factory('PickitUpService', [ '$http', '$window', 'Map', function($http, $window, Map) {
 	return {
 		init : function(container) {
 			Map.createMap(container);
 		},
 		getGames : function(timeSpan) {
-			return $http.get("http://localhost:3000/api/list", {
+			return $http.get(server+"/api/list", {
 				params : {
 					fromX : Map.map.getBounds().getSouthWest().lng(),
 					toX : Map.map.getBounds().getNorthEast().lng(),
@@ -27,7 +22,7 @@ phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', functio
 			});
 		},
 		getGamesCount : function(){
-			return $http.get("http://localhost:3000/api/count", {
+			return $http.get(server+"/api/count", {
 				params : {
 					fromX : Map.map.getBounds().getSouthWest().lng(),
 					toX : Map.map.getBounds().getNorthEast().lng(),
@@ -37,7 +32,7 @@ phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', functio
 			});
 		},
 		submitGame : function(game){
-			return $http.post("http://localhost:3000/api/creategame", {
+			return $http.post(server+"/api/creategame", {
 				title : game.title,
 				startDate : game.startDate,
 				duration : game.duration,
@@ -47,31 +42,31 @@ phonecatServices.factory('PickitUpService', [ '$http', '$window', 'Map', functio
 			});
 		},
 		joinGame : function(uniqueId) {
-			return $http.post("http://localhost:3000/api/nearme/join/" + uniqueId, {
+			return $http.post(server+"/api/nearme/join/" + uniqueId, {
 			});
 		},
 		leaveGame : function(uniqueId) {
-			return $http.post("http://localhost:3000/api/nearme/leave/" + uniqueId, {
+			return $http.post(server+"/api/nearme/leave/" + uniqueId, {
 			});
 		},
 		gameInfo : function(uniqueId) {
-			return $http.get("http://localhost:3000/api/game/"+uniqueId, {
+			return $http.get(server+"/api/game/"+uniqueId, {
 			});
 		}, 
 		playerInfo : function(uniqueId) {
-			return $http.get("http://localhost:3000/api/player/"+uniqueId, {
+			return $http.get(server+"/api/player/"+uniqueId, {
 			});
 		}, 
 		myDetails : function(){
-			return $http.get("http://localhost:3000/api/me");
+			return $http.get(server+"/api/me");
 		}
 	};
 } ]);
 
-phonecatServices.factory('AuthService', ['$http', '$window', function ($http, $window) {
+services.factory('AuthService', ['$http', '$window', function ($http, $window) {
   return {
     login: function (credentials) {
-      return $http.post('http://localhost:3000/login', {
+      return $http.post(server+'/login', {
           username: credentials.username,
           password: credentials.password
       });
@@ -86,26 +81,10 @@ phonecatServices.factory('AuthService', ['$http', '$window', function ($http, $w
   };
 } ]);
 
-phonecatApp.factory('AuthInterceptor',  ['$rootScope', '$q', '$window', function($rootScope, $q, $window) {
-	return {
-		request : function(config) {
-			config.headers = config.headers || {};
-			if ($window.sessionStorage.token) {
-				config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
-			}
-			return config;
-		},
-		response : function(response) {
-			if (response.status === 401) {
-				// handle the case where the user is not authenticated
-			}
-			return response || $q.when(response);
-		}
-	};
-}]);
 
 
-phonecatServices.service('Map', function() {
+
+services.service('Map', function() {
 	
 	var service = this;
 	
