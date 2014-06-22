@@ -49,24 +49,28 @@ exports.login_proceed = function(req, res, next) {
 };
 
 exports.login_fb = function(req, res, next) {
+	console.log('fb_id ' + req.body.fb_id);
 	UserHandling.getByFbId(
 		req.body.fb_id,
 		function (err, user) {
-	        if (err) return next(err);
-	        console.log('user: ' + JSON.stringify(user));
-	        if (typeof user.uniqueId != 'undefined'){
-	        	req.session.isLoggedIn = true;
-				req.session.fbLoggedIn = true;
-	        	req.session.userUniqueId = user.uniqueId;
-	        	res.send({redirect: '/nearme'});
-	        } else {
-	        	req.session.isLoggedIn = false;
-	        	res.render('login', {
-	        		userAuthenticated : false,
-	        		username: req.body.username,
-	        		hasErrors: true
-	        	});
-	        }
+			if (err)
+				return next(err);
+			
+			res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
+			var profile = {
+				first_name : user.firstname,
+				last_name : user.lastname,
+				uniqueId : user.uniqueId
+			};
+			// We are sending the profile inside the token
+			var token = jwt.sign(profile, 'LFKJLKSDFOIAJU1098179', {
+				expiresInMinutes : 60 * 5
+			});
+			
+			res.json({
+				token : token
+			});
 	    });
 	
 };
@@ -244,10 +248,19 @@ exports.signup_fb_proceed = function(req, res, next) {
 				data, 
 				function (err, user) {
 					if (err) return next(err);
-					req.session.isLoggedIn = true;
-					req.session.fbLoggedIn = true;
-		        	req.session.userUniqueId = user.uniqueId;
-		        	res.send({redirect: '/nearme'});
+					var profile = {
+						first_name : user.firstname,
+						last_name : user.lastname,
+						uniqueId : user.uniqueId
+					};
+					// We are sending the profile inside the token
+					var token = jwt.sign(profile, 'LFKJLKSDFOIAJU1098179', {
+						expiresInMinutes : 60 * 5
+					});
+					
+					res.json({
+						token : token
+					});
 				}
 		);
 	}

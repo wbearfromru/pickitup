@@ -6,11 +6,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var upload = require('jquery-file-upload-middleware');
 var expressJwt = require('express-jwt');
+var swig = require('swig');
 var jwt = require('jsonwebtoken');
 
 var routes = require('./routes/index');
 
 var app = express();
+
+app.engine('ejs', swig.renderFile);
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 // upload handler setup
 upload.configure({

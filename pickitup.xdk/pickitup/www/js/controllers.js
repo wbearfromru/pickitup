@@ -1,23 +1,70 @@
 'use strict';
 
 /* Controllers */
-var controllers = angular.module('controllers', []); 
+var controllers = angular.module('controllers', []);
 
 controllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
 	$scope.AuthService = AuthService;
 } ]);
 
-
-controllers.controller('HomeCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+controllers.controller('HomeCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window, $location, AuthService) {
 	$scope.AuthService = AuthService;
+
+	AuthService.init_fb();
+
+	$scope.signUp = function() {
+	};
+
+	$scope.signUpFB = function() {
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				proceedFBSignUp();
+			} else {
+				FB.login(function(response) {
+					if (response.authResponse) {
+						proceedFBSignUp();
+					}
+				});
+			}
+		});
+	};
+
+	function proceedFBSignUp() {
+		FB.api('/me', function(personaldata) {
+			if (!personaldata || personaldata.error)
+				return;
+
+			FB.api("/me/picture", function(picturedata) {
+				$.post("/v2/signup_fb", {
+					firstname : personaldata.first_name,
+					lastname : personaldata.last_name,
+					email : personaldata.email,
+					fb_id : personaldata.id,
+					description : personaldata.about,
+					playerSex : personaldata.gender,
+					dateOfBirth : personaldata.birthday,
+					picture : picturedata.data.url,
+				}, function(data) {
+					$window.sessionStorage.token = data.token;
+					$window.sessionStorage.isAuthenticated = true;
+					$location.path("/home");
+				});
+			});
+		});
+	}
 } ]);
 
 controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', 'Map', function($scope, $window, AuthService, PickitUpService, Map) {
 	$scope.AuthService = AuthService;
 	$scope.timeSpan = 0;
 	$scope.games = [];
-	
+	var mapRefreshTimeout = null;
+
 	$scope.setTimeSpan = function(timeSpan) {
+		if (typeof mapRefreshTimeout != 'undefined')
+			clearTimeout(mapRefreshTimeout);
+		
+		mapRefreshTimeout = setTimeout(function(){
 		$scope.timeSpan = timeSpan;
 		PickitUpService.getGames(timeSpan).success(function(results) {
 			$scope.games = results;
@@ -36,37 +83,38 @@ controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'Pick
 			$scope.games2 = results.games2;
 			$scope.games3 = results.games3;
 		});
+		}, 100);
 	};
-	
-	$scope.joinGame = function(game){
-		PickitUpService.joinGame(game.uniqueId).success(function(){
+
+	$scope.joinGame = function(game) {
+		PickitUpService.joinGame(game.uniqueId).success(function() {
 			game.alreadyJoined = true;
 		});
 	};
-	
+
 	$scope.leaveGame = function(game) {
-		PickitUpService.leaveGame(game.uniqueId).success(function(){
+		PickitUpService.leaveGame(game.uniqueId).success(function() {
 			game.alreadyJoined = false;
 		});
 	};
 
 	Map.createMap('map-canvas');
-	
+
 	Map.centerOnUserLocation(function(err, location) {
 		$scope.setTimeSpan($scope.timeSpan);
-		
+
 		google.maps.event.addListener(Map.map, 'center_changed', function() {
 			$scope.setTimeSpan($scope.timeSpan);
 		});
-		
+
 		google.maps.event.addListener(Map.map, 'zoom_changed', function() {
 			$scope.setTimeSpan($scope.timeSpan);
 		});
 	});
-	
+
 } ]);
 
-controllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService','PickitUpService', 'Map', function($scope, $location, AuthService, PickitUpService, Map) {
+controllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService', 'PickitUpService', 'Map', function($scope, $location, AuthService, PickitUpService, Map) {
 	$scope.AuthService = AuthService;
 	$scope.game = {};
 	$scope.game.location = {};
@@ -106,69 +154,92 @@ controllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService',
 	});
 
 	$scope.submitGame = function(game) {
-		PickitUpService.submitGame(game).then(
-			function(data){
-				$location.path("/nearme");
-			}, function(data){
-				$scope.errors = data.data.errors;
-			}
-		);
+		PickitUpService.submitGame(game).then(function(data) {
+			$location.path("/nearme");
+		}, function(data) {
+			$scope.errors = data.data.errors;
+		});
 	};
 
 } ]);
 
-controllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService',  function($scope, $window, AuthService, PickitUpService) {
+controllers.controller('MyProfileCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', function($scope, $window, AuthService, PickitUpService) {
 	$scope.AuthService = AuthService;
-	
-	PickitUpService.myDetails().success(function(data){
+
+	PickitUpService.myDetails().success(function(data) {
 		$scope.player = data.player;
 		$scope.games = data.games;
-		
-	    $('#calendar').fullCalendar({
-	        editable: true,
-	    	events: data.schedule
-	    });
+
+		$('#calendar').fullCalendar({
+			editable : true,
+			events : data.schedule
+		});
 	});
 } ]);
 
-controllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', 'Map', function($scope, $routeParams, AuthService,PickitUpService, Map) {
+controllers.controller('GameDetailCtrl', [ '$scope', '$routeParams', 'AuthService', 'PickitUpService', 'Map', function($scope, $routeParams, AuthService, PickitUpService, Map) {
 	$scope.AuthService = AuthService;
-	
-	PickitUpService.gameInfo($routeParams.uniqueId).success(function(data){
+
+	PickitUpService.gameInfo($routeParams.uniqueId).success(function(data) {
 		$scope.game = data.game;
 		$scope.players = data.players;
-		
+
 		Map.createMap('map-canvas');
 		var initialLocation = new google.maps.LatLng($scope.game.location.lat, $scope.game.location.lng);
 		Map.map.setCenter(initialLocation);
 		Map.addMarker(initialLocation, $scope.game.title);
 	});
 } ]);
-controllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', 'AuthService','PickitUpService', function($scope, $routeParams, AuthService, PickitUpService) {
+controllers.controller('PlayerDetailCtrl', [ '$scope', '$routeParams', 'AuthService', 'PickitUpService', function($scope, $routeParams, AuthService, PickitUpService) {
 	$scope.AuthService = AuthService;
-	
-	PickitUpService.playerInfo($routeParams.uniqueId).success(function(data){
+
+	PickitUpService.playerInfo($routeParams.uniqueId).success(function(data) {
 		$scope.player = data.player;
 	});
-	
+
 } ]);
 
-
-controllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window,$location, AuthService) {
+controllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window, $location, AuthService) {
 	$scope.credentials = {
 		username : '',
 		password : ''
 	};
+
+	AuthService.init_fb();
+
 	$scope.login = function(credentials) {
-		AuthService.login(credentials).
-		then(function (data, status, headers, config) {
-	        $window.sessionStorage.token = data.data.token;
+		AuthService.login(credentials).then(function(data, status, headers, config) {
+			$window.sessionStorage.token = data.data.token;
 			$window.sessionStorage.isAuthenticated = true;
 			$location.path('#/home');
-	    }, function (data) {
-	    	delete $window.sessionStorage.isAuthenticated;
-	    	delete $window.sessionStorage.token;
-	    });
+		}, function(data) {
+			delete $window.sessionStorage.isAuthenticated;
+			delete $window.sessionStorage.token;
+		});
 	};
-} ]);
 
+	$scope.login_fb = function() {
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				proceeedFbLogin(response.authResponse.userID);
+			} else {
+				FB.login(function(response) {
+					if (response.authResponse) {
+						proceeedFbLogin(response.authResponse.userID);
+					}
+				});
+			}
+		});
+	};
+
+	function proceeedFbLogin(userId) {
+		AuthService.login_fb(userId).then(function(data) {
+			console.log(data);
+			$window.sessionStorage.token = data.data.token;
+			$window.sessionStorage.isAuthenticated = true;
+			$location.path("/home");
+		}, function() {
+			$location.path("/login");
+		});
+	}
+} ]);

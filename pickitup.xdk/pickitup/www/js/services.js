@@ -3,7 +3,7 @@
 /* Services */
 var services = angular.module('services', ['ngResource']); 
 
-var server = 'http://localhost:3000';
+var server = 'http://pickitupbasketball.co/v2';
 
 services.factory('PickitUpService', [ '$http', '$window', 'Map', function($http, $window, Map) {
 	return {
@@ -63,22 +63,52 @@ services.factory('PickitUpService', [ '$http', '$window', 'Map', function($http,
 	};
 } ]);
 
-services.factory('AuthService', ['$http', '$window', function ($http, $window) {
-  return {
-    login: function (credentials) {
-      return $http.post(server+'/login', {
-          username: credentials.username,
-          password: credentials.password
-      });
-    },
-    logout: function(){
-    	delete $window.sessionStorage.isAuthenticated;
-    	$location.path("/");
-    },
-    isAuthenticated: function () {
-      return $window.sessionStorage.isAuthenticated;
-    }
-  };
+services.factory('AuthService', [ '$http', '$window', '$location', function($http, $window, $location) {
+	return {
+		login : function(credentials) {
+			return $http.post(server + '/login', {
+				username : credentials.username,
+				password : credentials.password
+			});
+		},
+		logout : function() {
+			delete $window.sessionStorage.isAuthenticated;
+			$location.path("/");
+		},
+		isAuthenticated : function() {
+			return $window.sessionStorage.isAuthenticated;
+		},
+
+		login_fb : function(userId) {
+			return $http.post(server + '/login_fb', {
+				fb_id : userId
+			});
+		},
+		init_fb: function(){
+			$window.fbAsyncInit = function() {
+				FB.init({
+					appId : '1432974593617773',
+					status : true,
+					cookie : true,
+					xfbml : true
+				});
+			};
+
+			(function(d) {
+				var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+				if (d.getElementById(id)) {
+					return;
+				}
+				js = d.createElement('script');
+				js.id = id;
+				js.async = true;
+				js.src = "//connect.facebook.net/en_US/all.js";
+
+				ref.parentNode.insertBefore(js, ref);
+
+			}(document));
+		}
+	};
 } ]);
 
 
@@ -132,13 +162,14 @@ services.service('Map', function() {
 
 	// Removes the markers from the map, but keeps them in the array.
 	service.clearMarkers = function() {
-		setAllMap(null);
+		var _self = this;
+		_self.setAllMap(null);
 		service.markers = [];
 	};
 	
 	service.setAllMap = function(map){
 		for (var i = 0; i < service.markers.length; i++) {
-			service.markers[i].setMap(service.map);
+			service.markers[i].setMap(map);
 		}
 	};
 	
