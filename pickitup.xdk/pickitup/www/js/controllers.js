@@ -7,12 +7,34 @@ controllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthService', f
 	$scope.AuthService = AuthService;
 } ]);
 
+controllers.controller('SignUpCtrl', [ '$scope', '$window','$location', 'AuthService', function($scope, $window,$location, AuthService) {
+	$scope.AuthService = AuthService;
+	
+	$scope.signUp = function(user) {
+		// Send data to server
+		AuthService.signup(user).then(function(data, status, headers, config) {
+			$window.sessionStorage.token = data.data.token;
+			$window.sessionStorage.isAuthenticated = true;
+			$location.path('#/home');
+		}, function(data) {
+			delete $window.sessionStorage.isAuthenticated;
+			delete $window.sessionStorage.token;
+		});
+	};
+	
+	// Init birthday picker
+	$('#dateOfBirthPicker').datetimepicker({
+		pickTime: false,
+	});
+} ]);
+
 controllers.controller('HomeCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window, $location, AuthService) {
 	$scope.AuthService = AuthService;
 
 	AuthService.init_fb();
 
 	$scope.signUp = function() {
+		$location.path('/signup');
 	};
 
 	$scope.signUpFB = function() {
@@ -35,16 +57,7 @@ controllers.controller('HomeCtrl', [ '$scope', '$window', '$location', 'AuthServ
 				return;
 
 			FB.api("/me/picture", function(picturedata) {
-				$.post("/v2/signup_fb", {
-					firstname : personaldata.first_name,
-					lastname : personaldata.last_name,
-					email : personaldata.email,
-					fb_id : personaldata.id,
-					description : personaldata.about,
-					playerSex : personaldata.gender,
-					dateOfBirth : personaldata.birthday,
-					picture : picturedata.data.url,
-				}, function(data) {
+				AuthService.signup_fb(personaldata, picturedata).success(function(data) {
 					$window.sessionStorage.token = data.token;
 					$window.sessionStorage.isAuthenticated = true;
 					$location.path("/home");
@@ -142,17 +155,17 @@ controllers.controller('CreateGameCtrl', [ '$scope', '$location', 'AuthService',
 		$scope.setTrackerLocation(event.latLng);
 	});
 
-	$('#startDatePicker').datetimepicker({}).on('dp.change,dp.show', function(e) {
-		$(this).find('input').change();
-	});
+	$('#startDatePicker').datetimepicker({});
 
 	$('#durationPicker').datetimepicker({
 		pickDate : false,
 		defaultDate : "02:00",
-	}).on('dp.change,dp.show', function(e) {
-		$(this).find('input').change();
 	});
 
+	$('#startDatePicker, #durationPicker').on('dp.change dp.show', function(e) {
+		$(this).find('input').change();
+	});
+	
 	$scope.submitGame = function(game) {
 		PickitUpService.submitGame(game).then(function(data) {
 			$location.path("/nearme");

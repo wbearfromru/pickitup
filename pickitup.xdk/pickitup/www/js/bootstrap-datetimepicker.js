@@ -1044,7 +1044,7 @@ THE SOFTWARE.
                             .seconds(0);
                         picker.setValue(mDate.format(picker.format))
                     } else {
-                        picker.setValue(pMoment().format(picker.format))
+                        picker.setValue(pMoment(picker.date).format(picker.format))
                     }
                 };
             }

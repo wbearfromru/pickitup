@@ -211,8 +211,20 @@ exports.signup_proceed = function(req, res, next) {
 		UserHandling.create(
 			data, 
 			function (err, user) {
-		        if (err) return next(err);
-		        res.redirect('/');
+				if (err) return next(err);
+				var profile = {
+					first_name : user.firstname,
+					last_name : user.lastname,
+					uniqueId : user.uniqueId
+				};
+				// We are sending the profile inside the token
+				var token = jwt.sign(profile, 'LFKJLKSDFOIAJU1098179', {
+					expiresInMinutes : 60 * 5
+				});
+				
+				res.json({
+					token : token
+				});
 			}
 		);
 	}

@@ -12,6 +12,9 @@ pickitupApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', {
 		templateUrl : 'partials/home.html',
 		controller : 'HomeCtrl'
+	}).when('/signup', {
+		templateUrl : 'partials/signup.html',
+		controller : 'SignUpCtrl'
 	}).when('/login', {
 		templateUrl : 'partials/login.html',
 		controller : 'LoginCtrl'

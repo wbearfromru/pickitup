@@ -7,8 +7,7 @@
 					<p class="lead">Find casual pickup games in your area!</p>
 					<div ng-if="!AuthService.isAuthenticated()">
 						<p>
-							<a href="/signup" role="button" class="btn btn-lg btn-primary">Sign
-								Up! &#187;</a>
+							<a ng-click="signUp()" role="button" class="btn btn-lg btn-primary">Sign Up! &#187;</a>
 						</p>
 						<p>
 							<a id="signupFB"  role="button" ng-click="signUpFB()" class="btn btn-lg btn-primary">Sign Up with Facebook! &#187;</a>

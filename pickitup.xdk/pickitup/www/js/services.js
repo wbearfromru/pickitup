@@ -107,6 +107,29 @@ services.factory('AuthService', [ '$http', '$window', '$location', function($htt
 				ref.parentNode.insertBefore(js, ref);
 
 			}(document));
+		},
+		signup: function(user){
+			return $http.post(server + '/signup', {
+				firstname: user.firstname,
+				lastname: user.lastname,
+				email: user.email,
+				password: user.password,
+				description: user.description,
+				playerSex: user.sex,
+				dateOfBirth: user.dateOfBirth,
+			});
+		},
+		signup_fb: function(user, picture){
+			return $http.post(server + '/signup_fb', {
+				firstname : user.first_name,
+				lastname : user.last_name,
+				email : user.email,
+				fb_id : user.id,
+				description : user.about,
+				playerSex : user.gender,
+				dateOfBirth : user.birthday,
+				picture : picture.data.url,
+			});
 		}
 	};
 } ]);
