@@ -52,7 +52,7 @@ body {
 	background-attachment: scroll;
 	background-clip: border-box;
 	background-color: rgba(0, 0, 0, 0);
-	background-image: url('../img/grey_dash.gif'), url('../img/white_background_textured.jpg');
+	/*background-image: url('../img/grey_dash.gif'), url('../img/white_background_textured.jpg');*/
 	background-repeat: repeat-x, no-repeat;
 	background-origin: padding-box;
 	background-size: auto;
@@ -202,22 +202,22 @@ ul.gallery-list {
 }
 
 #main-slider-near-me {
-  background-image: url('../img/background2_layered.png');
+  /*background-image: url('../img/background2_layered.png');*/
   background-attachment: fixed;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  padding: 100px 0 240px 0;
+  padding: 15px 0 240px 0;
 }
 
 #main-slider-create-game {
-  background-image: url('../img/background3_layered.png');
+  /*background-image: url('../img/background3_layered.png');*/
   background-attachment: fixed;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
   height: 150vh;
-  padding: 100px 0 100px 0;
+  padding: 15px 0 100px 0;
  }
  
  body {

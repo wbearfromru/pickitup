@@ -60,3 +60,24 @@ pickitupApp.config(function($httpProvider) {
 	$httpProvider.interceptors.push('AuthInterceptor');
 });
 
+pickitupApp.run(function ($rootScope) {
+    $rootScope.$on('$locationChangeSuccess', function (event, newUrl, oldUrl) {
+    	var url = newUrl.substring(newUrl.indexOf('#')+1);
+    	console.log(url);
+    	switch (url){
+    	case '/creategame':
+    		$rootScope.currentpage = 'Create game';
+    		break;
+    	case '/nearme':
+    		$rootScope.currentpage = 'Near me';
+    		break;
+    	case '/me':
+    		$rootScope.currentpage = 'Me';
+    		break;
+    	default:
+    		$rootScope.currentpage = 'Pick it up!';
+    		break;
+    	}
+    });
+});
+

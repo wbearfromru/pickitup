@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html  lang="en" ng-app="pickitup">
+<head>
+	<script>
+		var requestedUrl = location.href;
+		console.log('stored origin: ' + sessionStorage.getItem('myOrigin'));
+		if (sessionStorage.getItem('myOrigin') != null){
+			location = sessionStorage.getItem('myOrigin') + '/oauthcallback.html?' + location.hash ;
+		}
+	</script>
+	<script src="js/openfb.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="js/callbackapp.js"></script>
+	<script src="js/services.js"></script>
+</head><body ng-controller="FbCallbackCtrl">
+</body></html>

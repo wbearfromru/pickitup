@@ -84,30 +84,6 @@ services.factory('AuthService', [ '$http', '$window', '$location', function($htt
 				fb_id : userId
 			});
 		},
-		init_fb: function(){
-			$window.fbAsyncInit = function() {
-				FB.init({
-					appId : '1432974593617773',
-					status : true,
-					cookie : true,
-					xfbml : true
-				});
-			};
-
-			(function(d) {
-				var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-				if (d.getElementById(id)) {
-					return;
-				}
-				js = d.createElement('script');
-				js.id = id;
-				js.async = true;
-				js.src = "//connect.facebook.net/en_US/all.js";
-
-				ref.parentNode.insertBefore(js, ref);
-
-			}(document));
-		},
 		signup: function(user){
 			return $http.post(server + '/signup', {
 				firstname: user.firstname,
@@ -147,22 +123,62 @@ services.service('Map', function() {
 			zoom : 13,
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		};
+		var defaultLocation = new google.maps.LatLng(50.8464836,4.3520247);
+		if (window.localStorage.defaultLocationLat != null){
+			defaultLocation = new google.maps.LatLng(window.localStorage.defaultLocationLat,window.localStorage.defaultLocationLng);;
+		}
 		service.map = new google.maps.Map(document.getElementById(mapContainer), defaultMapOptions);
+		service.map.setCenter(defaultLocation);
+		
+		google.maps.event.addListener(service.map, 'center_changed', function() {
+			var center = service.map.getCenter();
+			window.localStorage.defaultLocationLat = center.lat();
+			window.localStorage.defaultLocationLng = center.lng();
+		});
+
+		google.maps.event.addListener(service.map, 'zoom_changed', function() {
+			var center = service.map.getCenter();
+			window.localStorage.defaultLocationLat = center.lat();
+			window.localStorage.defaultLocationLng = center.lng();
+		});
+		
 		return service.map;
 	};
 	
 	service.centerOnUserLocation = function(callback){
-		// Try W3C Geolocation (Preferred)
-		if (!navigator.geolocation) 
-			return;
-		
-		navigator.geolocation.getCurrentPosition(function(position) {
-			var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-			service.map.setCenter(initialLocation);
-			callback(null, initialLocation);
-		}, function() {
-			callback("Geonavigation service failed");
-		});
+		if (false && intel && intel.xdk.isnative==true){
+			console.log('Use intel geolocation');
+			//This array holds the options for the command
+			var options = {tmaximumAge:60000, timeout:15000, enableHighAccuracy: true };
+
+			//This function is called on every iteration of the watch Position command that fails
+			var fail = function(){
+				callback("Geonavigation service failed" + JSON.stringify(e));
+			};
+
+			//This function is called on every iteration of the watchPosition command that is a success
+			var suc = function(p){
+				alert("geolocation success! \n Latitude: " +position.coords.latitude + "\nLongitude: " +   position.coords.longitude);
+				var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				service.map.setCenter(initialLocation);
+				intel.xdk.geolocation.clearWatch(geolocationWatchTimer);
+				callback(null, initialLocation);
+			};
+
+			//This command starts watching the geolocation
+			var geolocationWatchTimer = intel.xdk.geolocation.watchPosition(suc,fail,options);
+
+			//Call the stopGeolocation function to stop the geolocation watch
+		} else {
+			console.log('Use navigator geolocation');
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+				service.map.setCenter(initialLocation);
+				callback(null, initialLocation);
+			}, function(e) {
+				callback("Geonavigation service failed" + JSON.stringify(e));
+			},{maximumAge:60000, timeout:60000, enableHighAccuracy:true});
+		}
 	}
 
 	//Add a marker to the map and push to the array.

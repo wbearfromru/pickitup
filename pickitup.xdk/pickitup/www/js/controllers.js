@@ -3,11 +3,11 @@
 /* Controllers */
 var controllers = angular.module('controllers', []);
 
-controllers.controller('NavigationCtrl', [ '$scope', '$window', 'AuthService', function($scope, $window, AuthService) {
+controllers.controller('NavigationCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window, $location, AuthService) {
 	$scope.AuthService = AuthService;
 } ]);
 
-controllers.controller('SignUpCtrl', [ '$scope', '$window','$location', 'AuthService', function($scope, $window,$location, AuthService) {
+controllers.controller('SignUpCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window,$location, AuthService) {
 	$scope.AuthService = AuthService;
 	
 	$scope.signUp = function(user) {
@@ -30,8 +30,6 @@ controllers.controller('SignUpCtrl', [ '$scope', '$window','$location', 'AuthSer
 
 controllers.controller('HomeCtrl', [ '$scope', '$window', '$location', 'AuthService', function($scope, $window, $location, AuthService) {
 	$scope.AuthService = AuthService;
-
-	AuthService.init_fb();
 
 	$scope.signUp = function() {
 		$location.path('/signup');
@@ -72,8 +70,9 @@ controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'Pick
 	$scope.timeSpan = 0;
 	$scope.games = [];
 	var mapRefreshTimeout = null;
-
+	console.log('begin');
 	$scope.setTimeSpan = function(timeSpan) {
+		console.log('setting timespan');
 		if (typeof mapRefreshTimeout != 'undefined')
 			clearTimeout(mapRefreshTimeout);
 		
@@ -105,15 +104,19 @@ controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'Pick
 		});
 	};
 
-	$scope.leaveGame = function(game) {
+	$scope.leaveGame = function(game) {		
 		PickitUpService.leaveGame(game.uniqueId).success(function() {
 			game.alreadyJoined = false;
 		});
 	};
-
+	console.log('create map');
 	Map.createMap('map-canvas');
 
+	console.log('try center map');
 	Map.centerOnUserLocation(function(err, location) {
+		if (err)
+			return console.log(err);
+		
 		$scope.setTimeSpan($scope.timeSpan);
 
 		google.maps.event.addListener(Map.map, 'center_changed', function() {
@@ -218,8 +221,6 @@ controllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthSer
 		password : ''
 	};
 
-	AuthService.init_fb();
-
 	$scope.login = function(credentials) {
 		AuthService.login(credentials).then(function(data, status, headers, config) {
 			$window.sessionStorage.token = data.data.token;
@@ -232,27 +233,7 @@ controllers.controller('LoginCtrl', [ '$scope', '$window', '$location', 'AuthSer
 	};
 
 	$scope.login_fb = function() {
-		FB.getLoginStatus(function(response) {
-			if (response.status === 'connected') {
-				proceeedFbLogin(response.authResponse.userID);
-			} else {
-				FB.login(function(response) {
-					if (response.authResponse) {
-						proceeedFbLogin(response.authResponse.userID);
-					}
-				});
-			}
-		});
+		openFB.login('email');
 	};
-
-	function proceeedFbLogin(userId) {
-		AuthService.login_fb(userId).then(function(data) {
-			console.log(data);
-			$window.sessionStorage.token = data.data.token;
-			$window.sessionStorage.isAuthenticated = true;
-			$location.path("/home");
-		}, function() {
-			$location.path("/login");
-		});
-	}
 } ]);
+
