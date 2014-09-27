@@ -3,7 +3,6 @@
 <head>
 	<script>
 		var requestedUrl = location.href;
-		console.log('stored origin: ' + sessionStorage.getItem('myOrigin'));
 		if (sessionStorage.getItem('myOrigin') != null){
 			location = sessionStorage.getItem('myOrigin') + '/oauthcallback.html?' + location.hash ;
 		}

@@ -11,13 +11,18 @@ pickitupApp.controller('FbCallbackCtrl', [ '$scope', '$window', '$location', 'Au
 		openFB.api({
             path: '/me',
             success: function(data) {
-            	AuthService.login_fb(data.id).then(function(data) {
-        			console.log(data);
-        			$window.sessionStorage.token = data.data.token;
+            	AuthService.login_fb(data.id).then(function(responsedata) {
+        			$window.sessionStorage.token = responsedata.data.token;
         			$window.sessionStorage.isAuthenticated = true;
         			location.href = 'index.html#/home';
         		}, function() {
-        			location.href = 'index.html#/login';
+        			AuthService.signup_fb(data, {data: {}}).then(function(responsedata) {
+    					$window.sessionStorage.token = responsedata.data.token;
+    					$window.sessionStorage.isAuthenticated = true;
+    					location.path("index.html#/home");
+    				}, function(){
+    					location.href = 'index.html#/login';
+    				});
         		});
             },
         	error: function(){

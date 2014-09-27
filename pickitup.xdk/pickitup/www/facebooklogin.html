@@ -3,7 +3,6 @@
 <head>
 </head><body>
 <script>
-	alert(window.location.search);
 	var oGetVars = {};
 
 	if (window.location.search.length > 1) {
@@ -14,7 +13,6 @@
 	}
 
 	sessionStorage.setItem("myOrigin", oGetVars.origin);
-	console.log('setting origin: ' + oGetVars.origin);
 	location = oGetVars.call;
 </script>
 </body></html>

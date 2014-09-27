@@ -36,33 +36,8 @@ controllers.controller('HomeCtrl', [ '$scope', '$window', '$location', 'AuthServ
 	};
 
 	$scope.signUpFB = function() {
-		FB.getLoginStatus(function(response) {
-			if (response.status === 'connected') {
-				proceedFBSignUp();
-			} else {
-				FB.login(function(response) {
-					if (response.authResponse) {
-						proceedFBSignUp();
-					}
-				});
-			}
-		});
+		openFB.login('email');
 	};
-
-	function proceedFBSignUp() {
-		FB.api('/me', function(personaldata) {
-			if (!personaldata || personaldata.error)
-				return;
-
-			FB.api("/me/picture", function(picturedata) {
-				AuthService.signup_fb(personaldata, picturedata).success(function(data) {
-					$window.sessionStorage.token = data.token;
-					$window.sessionStorage.isAuthenticated = true;
-					$location.path("/home");
-				});
-			});
-		});
-	}
 } ]);
 
 controllers.controller('NearMeCtrl', [ '$scope', '$window', 'AuthService', 'PickitUpService', 'Map', function($scope, $window, AuthService, PickitUpService, Map) {
